@@ -16,9 +16,7 @@
   },
   "minimum-stability": "dev",
   "require": {
-    "php": ">=7.0",
-    "topthink/think-helper": "^3.0.4",
-    "topthink/think-migration": "dev-master"
+    "php": ">=7.0"
   },
   "extra": {
     "think": {
@@ -31,6 +29,8 @@
     }
   },
   "require-dev": {
-    "topthink/framework": "5.0.*"
+    "topthink/framework": "5.0.*",
+    "topthink/think-helper": "^3.0.4",
+    "topthink/think-migration": "1.1.1"
   }
 }

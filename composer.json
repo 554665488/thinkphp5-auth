@@ -1,0 +1,36 @@
+{
+  "name": "yfl/thinkphp5-auth",
+  "description": "a auth of Thinkphp5",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "yfl",
+      "email": "554665488@qq.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "thinkAuth\\": "src"
+    }
+  },
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=7.0",
+    "topthink/think-helper": "^3.0.4",
+    "topthink/framework": "^6.0.0"
+  },
+  "extra": {
+    "think": {
+      "services": [
+        "thinkAuth\\Auth\\AuthService"
+      ],
+      "config": {
+        "queue": "src/config.php"
+      }
+    }
+  },
+  "require-dev": {
+    "topthink/think-migration": "^3.0.0"
+  }
+}

@@ -1,6 +1,6 @@
 <?php
 
-namespace thinkAuth\Auth\Controller;
+namespace thinkAuth\Controller;
 
 class Users
 {

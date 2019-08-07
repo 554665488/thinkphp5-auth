@@ -1,6 +1,6 @@
 <?php
 
-namespace thinkAuth\Auth\Config;
+namespace thinkAuth\Config;
 
  interface Table
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace thinkAuth\Auth;
+namespace thinkAuth;
 
 use think\Db;
 use think\Session;
-use thinkAuth\Auth\Config\AuthBase;
+use thinkAuth\Config\AuthBase;
 
 
 /**

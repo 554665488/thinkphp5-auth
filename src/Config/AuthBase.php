@@ -6,7 +6,7 @@
  * Time: 14:32
  */
 
-namespace thinkAuth\Auth\Config;
+namespace thinkAuth\Config;
 
 use think\facade\Request;
 

@@ -8,23 +8,21 @@
 
 namespace thinkAuth\Controller;
 
+use think\App;
 use think\Controller;
 use think\Request;
 use thinkAuth\Config\AuthBase;
 
 class Base extends Controller
 {
-    protected $request;
     protected $param;
     protected $post;
     protected $data;
 
-    public function __construct(Request $request = null)
+    public function __construct()
     {
-        parent::__construct($request);
+        parent::__construct();
         include_once __DIR__ . '/../Helper.php';
-
-        $this->request = $request;
         $this->param = $this->request->param();
         $this->post = $this->request->post();
         $this->data = ['staticDir' => AuthBase::LAY_UI_PATH];
@@ -47,5 +45,14 @@ class Base extends Controller
         $this->data = $data;
     }
 
+    protected  function returnLayuiTableJson(array $data = array(), $count = null, $msg = '')
+    {
+        return [
+            'code' => 0,
+            'msg' => $msg,
+            'count' => $count ?? count($data),
+            'data' => $data
+        ];
+    }
 
 }

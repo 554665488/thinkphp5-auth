@@ -1,9 +1,8 @@
 <?php
 
-use think\migration\Migrator;
-use think\migration\db\Column;
+use Phinx\Migration\AbstractMigration;
 
-class AuthGroupAccess extends Migrator
+class AuthGroupAccess extends AbstractMigration
 {
     /**
      * Change Method.
@@ -28,10 +27,9 @@ class AuthGroupAccess extends Migrator
      */
     public function change()
     {
-        $table = $this->table('y_auth_group_access');
+        $table = $this->table('y_auth_group_access',array('engine' => 'InnoDB', 'CHARSET' => 'utf8', 'comment' => '用户组表'));
         if ($table->exists()) $table->drop();
-        $table->setId('id')->setPrimaryKey('id')->setEngine('MyISAM')->setComment('用户组明细表')
-            ->addColumn('uid', 'integer', array('limit' => 11, 'null'=> false, 'default' => 0, 'comment' => '用户ID'))
+        $table->addColumn('uid', 'integer', array('limit' => 11, 'null'=> false, 'default' => 0, 'comment' => '用户ID'))
             ->addColumn('auth_group_id', 'integer', array('limit' => 11, 'null'=> false, 'default' => 0, 'comment' => '用户组id'))
             ->addIndex(array('uid','auth_group_id'))
             ->create();

@@ -8,4 +8,5 @@ return [
         'auth_rule'         => 'y_auth_rule', //和Database/migrations 定义的迁移文件一致
         'auth_user'         => 'y_user', // 和Database/migrations 定义的迁移文件一致
     ],
+    'layui_path' => '/static/js/plugins/'
 ];

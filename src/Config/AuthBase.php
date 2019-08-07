@@ -8,6 +8,7 @@
 
 namespace thinkAuth\Config;
 
+use think\facade\Config;
 use think\facade\Request;
 
 class AuthBase
@@ -16,6 +17,8 @@ class AuthBase
     const AUTH_TYPE = 1; // 认证方式，1为实时认证；2为登录认证。
     //视图目录
     const VIEW_PATH = __DIR__ . '/../view/';
+    //layui所在目录
+    const LAY_UI_PATH = '/static/js/plugins/';
     //** 不检测的权限 */
     protected static $notCheckAuth = [
 
@@ -32,7 +35,7 @@ class AuthBase
     protected $controller;
     protected $action;
 
-    protected $config = [
+    protected static $config = [
         'auth_on' => self::AUTH_ON,
         'auth_type' => self::AUTH_TYPE,
         'auth_group' => Table::AUTH_GROUP,
@@ -50,9 +53,9 @@ class AuthBase
         return self::$instance;
     }
 
-    public function __construct(array $config = array())
+    public function __construct()
     {
-        if ($config) $this->config = array_merge($this->config, $config);
+        if ($config = Config::get('auth')) self::$config = array_merge(self::$config, $config);
         /**
          * @Description:初始化认证参数
          */

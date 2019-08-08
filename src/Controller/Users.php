@@ -14,15 +14,22 @@ class Users extends Base
         //echo AuthBase::VIEW_PATH .'user/create.php';
 
         $this->view->engine->layout(false);
-        return $this->fetch(AuthBase::VIEW_PATH . 'user/create.php',$this->getData());
+        return $this->fetch(AuthBase::VIEW_PATH . 'user/create.php', $this->getData());
 
 
     }
 
     public function getUserList(array $params = [])
     {
-        $userModle  = new UserModel();
-        $users = $userModle->getUsersByPage();
-        return $this->returnLayuiTableJson($users->toArray(),$userModle->getUsersCount());
+        $userModel = new UserModel();
+        $users = $userModel->getUsersByPage();
+        return $this->returnLayuiTableJson($users->toArray(), $userModel->getUsersCount());
+    }
+
+    public function addUser()
+    {
+        if ($this->request->isPost()) {
+            dump($_POST);die;
+        }
     }
 }

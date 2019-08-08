@@ -8,5 +8,10 @@ return [
         'auth_rule'         => 'y_auth_rule', //和Database/migrations 定义的迁移文件一致
         'auth_user'         => 'y_user', // 和Database/migrations 定义的迁移文件一致
     ],
-    'layui_path' => '/static/js/plugins/'
+    'path' => [
+        'layui_css' => 'static/js/plugins/layui/css/layui.css',
+        'layui_js' => 'static/js/plugins/layui/layui.js',
+        'jquery' => '/static/js/jquery.min.js',
+    ]
+
 ];

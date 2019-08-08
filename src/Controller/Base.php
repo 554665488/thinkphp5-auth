@@ -10,6 +10,7 @@ namespace thinkAuth\Controller;
 
 use think\App;
 use think\Controller;
+use think\facade\Config;
 use think\Request;
 use thinkAuth\Config\AuthBase;
 
@@ -25,7 +26,7 @@ class Base extends Controller
         include_once __DIR__ . '/../Helper.php';
         $this->param = $this->request->param();
         $this->post = $this->request->post();
-        $this->data = ['staticDir' => AuthBase::LAY_UI_PATH];
+        $this->data = ['layui_css' => AuthBase::LAY_UI_PATH_CSS, 'jquery' => AuthBase::JQUERY_PATH, 'layui_js' => AuthBase::LAY_UI_PATH_JS];
     }
 
     /**
@@ -34,6 +35,7 @@ class Base extends Controller
      */
     public function getData(array $params = [])
     {
+        if (empty($params)) $params = empty($path = Config::get('config.path')) ? [] : $path;
         return array_merge($this->data, $params);
     }
 
@@ -45,7 +47,7 @@ class Base extends Controller
         $this->data = $data;
     }
 
-    protected  function returnLayuiTableJson(array $data = array(), $count = null, $msg = '')
+    protected function returnLayuiTableJson(array $data = array(), $count = null, $msg = '')
     {
         return [
             'code' => 0,
@@ -55,4 +57,13 @@ class Base extends Controller
         ];
     }
 
+    public function ajaxSuccess($code = 1, string $msg = '操作成功', array $data = array())
+    {
+        return ['code' => $code, 'msg' => $msg, 'data' => $data];
+    }
+
+    public function ajaxFail($code = 0, string $msg = '操作失败', array $data = array())
+    {
+        return ['code' => $code, 'msg' => $msg, 'data' => $data];
+    }
 }

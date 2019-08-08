@@ -13,6 +13,11 @@ class UserModel extends Model
         $status = [-1 => '删除', 0 => '禁用', 1 => '正常', 2 => '待审核'];
         return $status[$value];
     }
+//    public function setStatusAttr($value)
+//    {
+//        $status = ['on' => 0,  'off'=> 1];
+//        return $status[$value];
+//    }
     public function getSexAttr($value)
     {
         $status = [1 => '男', 2 => '女'];
@@ -37,6 +42,12 @@ class UserModel extends Model
     public function getUsersCount()
     {
         return $this->field('*')->count();
+    }
+
+    public function createUser()
+    {
+        $user = self::create(Request::post());
+        return $user['id'] ?? false;
     }
 
 }

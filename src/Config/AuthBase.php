@@ -17,8 +17,12 @@ class AuthBase
     const AUTH_TYPE = 1; // 认证方式，1为实时认证；2为登录认证。
     //视图目录
     const VIEW_PATH = __DIR__ . '/../view/';
-    //layui所在目录
-    const LAY_UI_PATH = '/static/js/plugins/';
+    //layuicss所在目录
+    const LAY_UI_PATH_CSS = '/static/js/plugins/layui/css/layui.css';
+    //layuicss所在目录
+    const LAY_UI_PATH_JS = '/static/js/plugins/layui/layui.js';
+    //jquery路径
+    const JQUERY_PATH = '/static/js/jquery.min.js';
     //** 不检测的权限 */
     protected static $notCheckAuth = [
 

@@ -12,11 +12,8 @@ class Users extends Base
     public function create()
     {
         //echo AuthBase::VIEW_PATH .'user/create.php';
-
         $this->view->engine->layout(false);
         return $this->fetch(AuthBase::VIEW_PATH . 'user/create.php', $this->getData());
-
-
     }
 
     public function getUserList(array $params = [])
@@ -29,7 +26,10 @@ class Users extends Base
     public function addUser()
     {
         if ($this->request->isPost()) {
-            dump($_POST);die;
+            $userModel = new UserModel();
+            $userId = $userModel->createUser();
+            if($userId) return $this->ajaxSuccess();
+            return $this->ajaxFail();
         }
     }
 }

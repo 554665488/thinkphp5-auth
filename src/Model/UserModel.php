@@ -20,7 +20,7 @@ class UserModel extends Model
     }
     public function setPasswordAttr($value)
     {
-        return password_encrypt($value);
+        return empty($value) ? 0 : password_encrypt($value);
     }
     public function getSexAttr($value)
     {
@@ -54,9 +54,9 @@ class UserModel extends Model
         return $user['id'] ?? false;
     }
 
-    public function editUser()
+    public function updateUser()
     {
-        $user = self::create(Request::post());
-        dump($user);
+        $user = self::update(Request::post());
+        return $user;
     }
 }

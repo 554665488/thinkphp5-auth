@@ -36,10 +36,9 @@ class Users extends Base
     public function editUser()
     {
         if ($this->request->isPost()) {
-            dump($_POST);die;
             $userModel = new UserModel();
-            $userId = $userModel->editUser();
-            if($userId) return $this->ajaxSuccess();
+            $updateResult = $userModel->updateUser();
+            if($updateResult) return $this->ajaxSuccess();
             return $this->ajaxFail();
         }
     }

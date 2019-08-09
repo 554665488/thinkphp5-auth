@@ -12,15 +12,16 @@ function getStaticPath()
 
 function password_encrypt($password)
 {
-    $salt = makeRandStrByLength(21);
-    $options = [
-        'cost' => 10, //指明递归算法的层数
-        'salt' => $salt
-    ];
-    return $password = password_hash($password, PASSWORD_BCRYPT, $options);
+//    $salt = makeRandStrByLength(21);
+
+//    $options = [
+//        'cost' => 10, //指明递归算法的层数
+//        'salt' => $salt
+//    ];
+    return $password = password_hash($password, PASSWORD_BCRYPT);
 }
 
-function password_verify($postPassword,$DbPassword)
+function verify_password($postPassword,$DbPassword)
 {
     return password_verify($postPassword,$DbPassword);
 }

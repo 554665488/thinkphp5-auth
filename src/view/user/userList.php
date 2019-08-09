@@ -94,6 +94,7 @@
         </div>
         <div class="layui-form-item">
             <div class="layui-input-block">
+                <input type="hidden" value="" name="id" id="user_id"/>
                 <button class="layui-btn" lay-submit lay-filter="editUser">立即提交</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
@@ -191,6 +192,9 @@
         });
 
         form.on('submit(editUser)', function (data) {
+            //没有填写密码 视为不更新密码
+            if(data.field.password.length == 0 ) delete data.field.password;
+            console.log(data);
             ajaxRequest('{:url("auth/editUser")}', data.field, 'POST', true);
 //            layer.msg(JSON.stringify(data.field));
             return false;
@@ -273,24 +277,23 @@
         //监听行工具事件
         table.on('tool(userTable)', function (obj) {
                 var data = obj.data;
-
                 if (obj.event === 'del') {
                     layer.confirm('真的删除行么', function (index) {
                         obj.del();
                         layer.close(index);
                     });
                 } else if (obj.event === 'edit') {
-                    data.status = (data.status == '正常') ? 'on' : 'off';
-                    data.sex = (data.status == '女') ? 2 : 1;
-                    console.log(data);
+                    data.status = (data.status == '正常') ? 'on' : '';
+                    data.sex = (data.sex == '女') ? 2 : 1;
                     layui.use('form', function () {
                         var form = layui.form;
                         //表单初始复制
                         form.val("editForm", {
-                            "user_name": '1221'
+                            "user_name":  data.user_name
                             ,"email": data.email
                             ,"status": data.status
                             ,"sex": data.sex
+                            ,'id':data.id
                         });
                     });
                     layer.open({

@@ -42,4 +42,13 @@ class Users extends Base
             return $this->ajaxFail();
         }
     }
+    public function delUser()
+    {
+        if ($this->request->isPost()) {
+            $userModel = new UserModel();
+            $deltedResult = $userModel->destroyUser();
+            if($deltedResult) return $this->ajaxSuccess();
+            return $this->ajaxFail();
+        }
+    }
 }

@@ -59,4 +59,9 @@ class UserModel extends Model
         $user = self::update(Request::post());
         return $user;
     }
+
+    public function destroyUser()
+    {
+        return self::destroy(Request::post('id'));
+    }
 }

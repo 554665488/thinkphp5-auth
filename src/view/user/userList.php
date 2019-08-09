@@ -211,25 +211,25 @@
             , title: '用户数据表'
             , cols: [[
                 {type: 'checkbox', fixed: 'left'}
-                , {field: 'id', title: 'ID', width: 80, fixed: 'left', unresize: true, sort: true}
-                , {field: 'user_name', title: '用户名', width: 120, edit: 'text'}
+                , {field: 'id', title: 'ID', width: 100, fixed: 'left', unresize: true, sort: true, align:'center'}
+                , {field: 'user_name', title: '用户名', width: 150, edit: 'text', align:'center'}
                 , {
                     field: 'email', title: '邮箱', width: 200, edit: 'text', templet: function (res) {
                         return '<em>' + res.email + '</em>'
-                    }
+                    }, align:'center'
                 }
-                , {field: 'sex', title: '性别', width: 120, edit: 'text', sort: true}
+                , {field: 'sex', title: '性别', width: 140, edit: 'text', sort: true, align:'center'}
                 // ,{field:'city', title:'城市', width:100}
-                , {field: 'status', title: '状态', width: 120}
-                , {field: 'experience', title: '积分', width: 80, sort: true}
-                , {field: 'ip', title: 'IP', width: 120}
-                , {field: 'login_count', title: '登入次数', width: 100, sort: true}
-                , {field: 'created_at', title: '加入时间', width: 200}
-                , {fixed: 'right', title: '操作', toolbar: '#action', width: 150}
+                , {field: 'status', title: '状态', width: 120, align:'center'}
+                , {field: 'experience', title: '积分', width: 80, sort: true, align:'center'}
+                , {field: 'ip', title: 'IP', align:'center', width: 200}
+                , {field: 'login_count', title: '登入次数', width: 120, sort: true, align:'center'}
+                , {field: 'created_at', title: '加入时间', width: 200, align:'center'}
+                , {fixed: 'right', title: '操作', toolbar: '#action', width: 300, align:'center'}
             ]]
             , page: true
             , id: 'userTable'
-            , height: 'full-200'
+            , height: 'full-30'
             , cellMinWidth: 80
             , limit: 30
             , text: {
@@ -253,6 +253,16 @@
                     break;
                 case 'delUsers':
                     var data = checkStatus.data;
+                    if(data.length == 0 ){
+                        layer.msg('选中了：' + data.length + ' 个'); return;
+                    }
+                    var ids = '';
+                    $.each(data,function (k,val) {
+                        ids += val.id + ',';
+                    })
+                    ids = ids.substring(0,ids.length-1);
+
+                    ajaxRequest('{:url("auth/delUser")}', {id:ids}, 'post',true);
                     layer.msg('选中了：' + data.length + ' 个');
                     break;
             }
@@ -279,6 +289,7 @@
                 var data = obj.data;
                 if (obj.event === 'del') {
                     layer.confirm('真的删除行么', function (index) {
+                        ajaxRequest('{:url("auth/delUser")}', {id:data.id}, 'post');
                         obj.del();
                         layer.close(index);
                     });

@@ -9,11 +9,11 @@ use thinkAuth\Model\UserModel;
 class Users extends Base
 {
 
-    public function create()
+    public function userList()
     {
         //echo AuthBase::VIEW_PATH .'user/create.php';
         $this->view->engine->layout(false);
-        return $this->fetch(AuthBase::VIEW_PATH . 'user/create.php', $this->getData());
+        return $this->fetch(AuthBase::VIEW_PATH . 'user/userList.php', $this->getData());
     }
 
     public function getUserList(array $params = [])
@@ -28,6 +28,17 @@ class Users extends Base
         if ($this->request->isPost()) {
             $userModel = new UserModel();
             $userId = $userModel->createUser();
+            if($userId) return $this->ajaxSuccess();
+            return $this->ajaxFail();
+        }
+    }
+
+    public function editUser()
+    {
+        if ($this->request->isPost()) {
+            dump($_POST);die;
+            $userModel = new UserModel();
+            $userId = $userModel->editUser();
             if($userId) return $this->ajaxSuccess();
             return $this->ajaxFail();
         }

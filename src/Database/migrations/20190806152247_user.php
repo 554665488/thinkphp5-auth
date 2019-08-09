@@ -36,9 +36,9 @@ class User extends AbstractMigration
             ->addColumn('status', 'boolean', array('limit' => 1, 'null'=> false, 'default' => 0, 'comment' => '状态：为1正常，为0禁用'))
             ->addColumn('email', 'string', array('limit' => 32, 'null' => false, 'default' => '', 'comment' => '邮箱'))
             ->addColumn('sex', 'enum', array('limit' => 32, 'null' => false, 'default' => 1, 'values' =>'1,2', 'comment' => '性别 1男 2女'))
-            ->addColumn('experience', 'integer', array('limit' => 11, 'null' => false, 'default' => 1, 'comment' => '性别 1男 2女'))
+            ->addColumn('experience', 'integer', array('limit' => 11, 'null' => false, 'default' => 1, 'comment' => '积分'))
             ->addColumn('ip', 'string', array('limit' => 20, 'null' => false, 'default' => '', 'comment' => 'IP'))
-            ->addColumn('login_count', 'integer', array('limit' => 11, 'null' => false, 'default' => 1, 'comment' => '性别 1男 2女'))
+            ->addColumn('login_count', 'integer', array('limit' => 11, 'null' => false, 'default' => 1, 'comment' => '登录次数'))
             ->addIndex(array('user_name'))
             ->create();
 

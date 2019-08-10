@@ -13,15 +13,18 @@ class UserModel extends Model
         $status = [-1 => '删除', 0 => '禁用', 1 => '正常', 2 => '待审核'];
         return $status[$value];
     }
+
     public function setStatusAttr($value)
     {
-        if($value == 'on') return 1;
+        if ($value == 'on') return 1;
         return 0;
     }
+
     public function setPasswordAttr($value)
     {
         return empty($value) ? 0 : password_encrypt($value);
     }
+
     public function getSexAttr($value)
     {
         $status = [1 => '男', 2 => '女'];
@@ -39,8 +42,12 @@ class UserModel extends Model
     {
         $page = Request::get('page', 1, 'intval');
         $limit = Request::get('limit', 15, 'intval');
-
-        return $this->field('*')->page($page, $limit)->order('id', 'desc')->select();
+        $map = [];
+        if (Request::has('search')) {
+            $map[] = ['user_name', 'like', Request::get('search') . '%'];
+            $map[] = ['email', 'like', Request::get('search') . '%'];
+        }
+        return $this->field('*')->page($page, $limit)->whereOr($map)->order('id', 'desc')->select();
     }
 
     public function getUsersCount()

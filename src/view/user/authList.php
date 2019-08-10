@@ -56,51 +56,7 @@
         </div>
     </form>
 </div>
-<div id="editUser" style="display: none">
-    <form class="layui-form" lay-filter="editForm">
-        <div class="layui-form-item">
-            <label class="layui-form-label">用户名</label>
-            <div class="layui-input-block" style="width: 300px">
-                <input type="text" name="user_name" required lay-verify="required" placeholder="请输入用户名"
-                       autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">邮箱</label>
-            <div class="layui-input-block" style="width: 300px">
-                <input type="text" name="email" required placeholder="请输入邮箱" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">密码</label>
-            <div class="layui-input-inline">
-                <input type="password" name="password"  placeholder="请输入密码"
-                       autocomplete="off" class="layui-input">
-            </div>
-        </div>
 
-        <div class="layui-form-item">
-            <label class="layui-form-label">状态</label>
-            <div class="layui-input-block">
-                <input type="checkbox" name="status" lay-skin="switch" lay-text="开启|禁用">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">性别</label>
-            <div class="layui-input-block">
-                <input type="radio" name="sex" value="1" title="男" id="man">
-                <input type="radio" name="sex" value="2" title="女" id='woman'>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-input-block">
-                <input type="hidden" value="" name="id" id="user_id"/>
-                <button class="layui-btn" lay-submit lay-filter="editUser">立即提交</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-            </div>
-        </div>
-    </form>
-</div>
 <div id="search" style="display: none">
     <form class="layui-form" lay-filter="searchForm">
         <div class="layui-form-item">
@@ -118,28 +74,11 @@
         </div>
     </form>
 </div>
-<!--<script type="text/html" id="toolbarDemo">-->
-<!--    <div class="layui-btn-container">-->
-<!--        <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>-->
-<!--        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>-->
-<!--        <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>-->
-<!--    </div>-->
-<!--</script>-->
 
-<!--<div class="userTable">-->
-<!--    <div class="layui-inline">-->
-<!--        <input class="layui-input" placeholder="搜索ID：" name="id" id="demoReload" autocomplete="off">-->
-<!--    </div>-->
-<!--    <button class="layui-btn" data-type="reload">搜索</button>-->
-<!--</div>-->
 <script type="text/html" id="headTool">
     <div class="layui-btn-container">
-        <!--        <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>-->
-        <!--        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>-->
-        <!--        <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>-->
         <button type="button" class="layui-btn  layui-btn-sm" lay-event="addUser"><i
                     class="layui-icon"></i></button>
-        <!--        <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" lay-event="getCheckData"><i class="layui-icon"></i></button>-->
         <button type="button" class="layui-btn layui-btn-danger layui-btn-sm" lay-event="delUsers"><i
                     class="layui-icon"></i></button>
         <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="searchUsers">
@@ -149,13 +88,24 @@
 
     </div>
 </script>
+<div class="layui-tab layui-tab-brief" lay-filter="authListTabBrief">
+    <ul class="layui-tab-title">
+        <li class="layui-this">权限列表</li>
+        <li>树形列表</li>
+    </ul>
+    <div class="layui-tab-content" style="height: 100px;">
+        <div class="layui-tab-item layui-show">
+            <table class="layui-hide" id="authTable" lay-filter="authTableFilter"></table>
+        </div>
+        <div class="layui-tab-item">内容2</div>
 
-<table class="layui-hide" id="userTable" lay-filter="userTable"></table>
+    </div>
+</div>
+
 <script type="text/html" id="action">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
-
 <script>
     function ajaxRequest(url, data, type, isReload) {
         var index;
@@ -200,8 +150,23 @@
         });
     }
 </script>
-
 <script>
+    layui.use('element', function(){
+        var $ = layui.jquery
+            ,element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+        //触发事件
+        element.on('tab(authListTabBrief)', function(data){
+            console.log(data);
+            console.log(this); //当前Tab标题所在的原始DOM元素
+            console.log(data.index); //得到当前Tab的所在下标
+            console.log(data.elem); //得到当前的Tab大容器
+        });
+
+    });
+</script>
+<script>
+    //tab
+
     //监听表单提交事件
     layui.use('form', function () {
         var form = layui.form;
@@ -244,8 +209,8 @@
         var table = layui.table;
         //表格渲染
         table.render({
-            elem: '#userTable'
-            , url: '{:url("auth/ajaxGetUserList")}'
+            elem: '#authTable'
+            , url: '{:url("auth/ajaxGetAuthList")}'
             , toolbar: '#headTool'
             , title: '用户数据表'
             , cols: [[
@@ -330,23 +295,7 @@
 
             }
         });
-//        //头工具栏事件
-//        table.on('toolbar(userTable)', function(obj){
-//            var checkStatus = table.checkStatus(obj.config.id);
-//            switch(obj.event){
-//                case 'getCheckData':
-//                    var data = checkStatus.data;
-//                    layer.alert(JSON.stringify(data));
-//                    break;
-//                case 'getCheckLength':
-//                    var data = checkStatus.data;
-//                    layer.msg('选中了：'+ data.length + ' 个');
-//                    break;
-//                case 'isAll':
-//                    layer.msg(checkStatus.isAll ? '全选': '未全选');
-//                    break;
-//            };
-//        });
+
         //监听行工具事件
         table.on('tool(userTable)', function (obj) {
                 var data = obj.data;

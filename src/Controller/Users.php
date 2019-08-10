@@ -16,14 +16,16 @@ class Users extends Base
         return $this->fetch(AuthBase::VIEW_PATH . 'user/userList.php', $this->getData());
     }
 
-    public function getUserList(array $params = [])
+    public function ajaxGetUserList(array $params = [])
     {
-        $userModel = new UserModel();
-        $users = $userModel->getUsersByPage();
-        return $this->returnLayuiTableJson($users->toArray(), $userModel->getUsersCount());
+        if($this->request->isAjax()){
+            $userModel = new UserModel();
+            $users = $userModel->getUsersByPage();
+            return $this->returnLayuiTableJson($users->toArray(), $userModel->getUsersCount());
+        }
     }
 
-    public function addUser()
+    public function ajaxAddUser()
     {
         if ($this->request->isPost()) {
             $userModel = new UserModel();
@@ -33,7 +35,7 @@ class Users extends Base
         }
     }
 
-    public function editUser()
+    public function ajaxEditUser()
     {
         if ($this->request->isPost()) {
             $userModel = new UserModel();
@@ -42,7 +44,7 @@ class Users extends Base
             return $this->ajaxFail();
         }
     }
-    public function delUser()
+    public function ajaxDelUser()
     {
         if ($this->request->isPost()) {
             $userModel = new UserModel();

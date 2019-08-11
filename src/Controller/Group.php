@@ -19,10 +19,10 @@ use thinkAuth\Model\AuthModel;
  * @package thinkAuth\Controller
  * @Author: yfl
  * @Email: 554665488@qq.com
- * @Date:2019年8月10日23:15:50
- * @Description:权限控制器
+ * @Date:2019-08-11 21:32:32
+ * @Description:权限组控制器
  */
-class Auth extends Base
+class Group extends Base
 {
     /**
      * @Author: yfl
@@ -31,22 +31,22 @@ class Auth extends Base
      * @Description:权限列表
      * @return mixed
      */
-    public function authList()
+    public function groupList()
     {
-        return $this->fetch(AuthBase::VIEW_PATH . 'user/authList.php', $this->getData());
+        return $this->fetch(AuthBase::VIEW_PATH . 'user/groupList.php', $this->getData());
     }
 
     /**
      * @Author: yfl
      * @Email: 554665488@qq.com
      * @Date:二〇一九年八月十日 23:16:39
-     * @Description:layui表格获取权限数据
+     * @Description:layui表格获取权限组数据
      * @return array
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function ajaxGetAuthList()
+    public function ajaxGetGroupList()
     {
         if ($this->request->isAjax()) {
             $authModel = new AuthModel();
@@ -59,10 +59,10 @@ class Auth extends Base
      * @Author: yfl
      * @Email: 554665488@qq.com
      * @Date:2019年8月10日 23:17:11
-     * @Description:添加权限规则
+     * @Description:添加权限组规则
      * @return array
      */
-    public function ajaxAddAuth()
+    public function ajaxAddGroup()
     {
         if ($this->request->isPost()) {
             $authModel = new AuthModel();
@@ -75,10 +75,10 @@ class Auth extends Base
     /**
      * @Author: yfl
      * @Email: 554665488@qq.com
-     * @Date:编辑权限规则
-     * @Description:
+     * @Date:二〇一九年八月十一日 21:34:12
+     * @Description:编辑权限组
      */
-    public function ajaxEditAuth()
+    public function ajaxEditGroup()
     {
         if ($this->request->isPost()) {
             $authModel = new AuthModel();
@@ -95,38 +95,13 @@ class Auth extends Base
      * @Description:删除权限 一个或者多个
      * @return array
      */
-    public function ajaxDelAuth()
+    public function ajaxDelGroup()
     {
         if ($this->request->isPost()) {
             $authModel = new AuthModel();
             $deltedResult = $authModel->destroyAuth();
             if ($deltedResult) return $this->ajaxSuccess();
             return $this->ajaxFail();
-        }
-    }
-
-    /**
-     * @Author: yfl
-     * @Email: 554665488@qq.com
-     * @Date:
-     * @Description:获取所有权限
-     * @return array
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
-     */
-    public function getAuthAll()
-    {
-        if ($this->request->isGet()) {
-            $authModel = new AuthModel();
-//            $auths = $authModel ->getAllAuths('getList');
-//            dump($auths);die;
-            if(Request::has('type') and Request::param('type') == 'treejson'){
-                $auths = $authModel ->getAllAuths('getTreeLayuiData');
-                return ['auths'=> $auths];
-            }
-            $auths = $authModel ->getAllAuths('getTreeToHtmlOption');
-            return ['auths'=> $auths];
         }
     }
 }

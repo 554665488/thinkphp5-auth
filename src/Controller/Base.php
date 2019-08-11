@@ -26,7 +26,7 @@ class Base extends Controller
         include_once __DIR__ . '/../Helper.php';
         $this->param = $this->request->param();
         $this->post = $this->request->post();
-        $this->data = ['layui_css' => AuthBase::LAY_UI_PATH_CSS, 'jquery' => AuthBase::JQUERY_PATH, 'layui_js' => AuthBase::LAY_UI_PATH_JS];
+        $this->data = ['layui_css' => AuthBase::LAY_UI_PATH_CSS, 'jquery' => AuthBase::JQUERY_PATH, 'layui_js' => AuthBase::LAY_UI_PATH_JS, 'limit' => AuthBase::TABLE_LIMIT];
     }
 
     /**
@@ -35,7 +35,9 @@ class Base extends Controller
      */
     public function getData(array $params = [])
     {
-        if (empty($params)) $params = empty($path = Config::get('config.path')) ? [] : $path;
+        //获取自定义配置信息
+        if (empty($params)) $params = empty($path = Config::get('auth.path')) ? [] : $path;
+        if (!empty(Config::get('auth.table_config'))) $this->data = array_merge($this->data, Config::get('auth.table_config'));
         return array_merge($this->data, $params);
     }
 

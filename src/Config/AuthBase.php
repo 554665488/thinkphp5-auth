@@ -23,6 +23,8 @@ class AuthBase
     const LAY_UI_PATH_JS = '/static/js/plugins/layui/layui.js';
     //jquery路径
     const JQUERY_PATH = '/static/js/jquery.min.js';
+    //获取列表数据的数量
+    const TABLE_LIMIT = 30;
     //** 不检测的权限 */
     protected static $notCheckAuth = [
 
@@ -33,20 +35,20 @@ class AuthBase
      * @var object $instance
      */
     protected static $instance;
-    protected $request;
-    protected $param;
-    protected $module;
-    protected $controller;
-    protected $action;
+//    protected $request;
+//    protected $param;
+//    protected $module;
+//    protected $controller;
+//    protected $action;
 
-    protected static $config = [
-        'auth_on' => self::AUTH_ON,
-        'auth_type' => self::AUTH_TYPE,
-        'auth_group' => Table::AUTH_GROUP,
-        'auth_group_access' => Table::AUTH_GROUP_ACCESS,
-        'auth_rule' => Table::AUTH_RULE,
-        'auth_user' => Table::AUTH_USER,
-    ];
+//    protected static $config = [
+//        'auth_on' => self::AUTH_ON,
+//        'auth_type' => self::AUTH_TYPE,
+//        'auth_group' => Table::AUTH_GROUP,
+//        'auth_group_access' => Table::AUTH_GROUP_ACCESS,
+//        'auth_rule' => Table::AUTH_RULE,
+//        'auth_user' => Table::AUTH_USER,
+//    ];
 
 
     public static function instance()
@@ -57,16 +59,16 @@ class AuthBase
         return self::$instance;
     }
 
-    public function __construct()
-    {
-        if ($config = Config::get('auth')) self::$config = array_merge(self::$config, $config);
-        /**
-         * @Description:初始化认证参数
-         */
-        $this->request = Request::instance();
-        $this->param = $this->request->param();
-        $this->module = $this->request->module();
-        $this->controller = $this->request->controller();
-        $this->action = $this->request->action();
-    }
+//    public function __construct()
+//    {
+//        if ($config = Config::get('auth.table')) self::$config = array_merge(self::$config, $config, Config::get('auth.switch'));
+//        /**
+//         * @Description:初始化认证参数
+//         */
+//        $this->request = Request::instance();
+//        $this->param = $this->request->param();
+//        $this->module = $this->request->module();
+//        $this->controller = $this->request->controller();
+//        $this->action = $this->request->action();
+//    }
 }

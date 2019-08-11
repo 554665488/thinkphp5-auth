@@ -12,82 +12,151 @@
 
 </head>
 <body>
-<div id="addUser" style="display: none">
-    <form class="layui-form" lay-filter="userForm">
+<!--create auth start-->
+<div id="addAuthDiv" style="display: none">
+    <form class="layui-form" lay-filter="addAuthForm">
         <div class="layui-form-item">
-            <label class="layui-form-label">用户名</label>
-            <div class="layui-input-block" style="width: 300px">
-                <input type="text" name="user_name" required lay-verify="required" placeholder="请输入用户名"
+            <div class="layui-inline">
+                <label class="layui-form-label">权限分组</label>
+                <div class="layui-input-block" style="width: 350px">
+                    <select id="parent_id" name="parent_id" lay-verify="required" lay-search="">
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">权限规则</label>
+            <div class="layui-input-block" style="width: 350px">
+                <input type="text" name="name" required lay-verify="required" placeholder="请输规则Controller/action"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">邮箱</label>
-            <div class="layui-input-block" style="width: 300px">
-                <input type="text" name="email" required placeholder="请输入邮箱" autocomplete="off" class="layui-input">
+            <label class="layui-form-label">权限名称</label>
+            <div class="layui-input-block" style="width: 350px">
+                <input type="text" name="title" required placeholder="请输权限中文名称" autocomplete="off"
+                       class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">密码</label>
-            <div class="layui-input-inline">
-                <input type="password" name="password" required lay-verify="required" placeholder="请输入密码"
+            <label class="layui-form-label">规则表达式</label>
+            <div class="layui-input-block" style="max-width: 350px">
+                <input type="text" name="condition" placeholder="请输规则表达式"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
-
+        <div class="layui-form-item">
+            <label class="layui-form-label">请求方式</label>
+            <div class="layui-input-block" style="max-width: 350px">
+                <input type="text" name="method" placeholder="get/post/put/delete"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
         <div class="layui-form-item">
             <label class="layui-form-label">状态</label>
             <div class="layui-input-block">
-                <input type="checkbox" name="status" lay-skin="switch" lay-text="开启|禁用">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">性别</label>
-            <div class="layui-input-block">
-                <input type="radio" name="sex" value="1" title="男" id="man">
-                <input type="radio" name="sex" value="2" title="女" id='woman'>
+                <input type="checkbox" name="status" lay-skin="switch" lay-text="开启|禁用" checked>
             </div>
         </div>
         <div class="layui-form-item">
             <div class="layui-input-block">
-                <button class="layui-btn" lay-submit lay-filter="addUser">立即提交</button>
+                <button class="layui-btn" lay-submit lay-filter="addAuthSubmitFilter">立即提交</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>
     </form>
 </div>
-
-<div id="search" style="display: none">
-    <form class="layui-form" lay-filter="searchForm">
+<!--create auth end-->
+<!--edit auth start-->
+<div id="editAuthDiv" style="display: none">
+    <form class="layui-form" lay-filter="editAuthForm">
         <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">权限分组</label>
+                <div class="layui-input-block" style="width: 350px">
+                    <select id="edit_parent_id" name="parent_id" lay-verify="required" lay-search="">
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">权限规则</label>
+            <div class="layui-input-block" style="max-width: 350px">
+                <input type="text" name="name" required lay-verify="required" placeholder="请输规则Controller/action"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">权限名称</label>
+            <div class="layui-input-block" style="max-width: 350px">
+                <input type="text" name="title" required placeholder="请输权限中文名称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">规则表达式</label>
+            <div class="layui-input-block" style="max-width: 350px">
+                <input type="text" name="condition" placeholder="请输规则表达式"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">请求方式</label>
+            <div class="layui-input-block" style="max-width: 350px">
+                <input type="text" name="method" placeholder="get/post/put/delete"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-block">
+                <input type="checkbox" name="status" lay-skin="switch" lay-text="开启|禁用" checked>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <input type="hidden" name="id"/>
+                <button class="layui-btn" lay-submit lay-filter="editAuthSubmitFilter">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!--edit auth end-->
+<!--search html start-->
+<div id="searchDiv" style="display: none">
+    <form class="layui-form" lay-filter="searchForm">
+        <div class="layui-form-item" style="margin-top: 35px">
             <label class="layui-form-label">查询条件</label>
             <div class="layui-input-block" style="width: 300px">
-                <input type="text" name="search" required lay-verify="required" placeholder="用户名或邮箱"
+                <input type="text" name="search" required lay-verify="required" placeholder="规则或者名称"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <div class="layui-input-block">
-                <button class="layui-btn" lay-submit lay-filter="searchUser">搜索</button>
+                <button class="layui-btn" lay-submit lay-filter="searchAuthSubmit">搜索</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>
     </form>
 </div>
-
+<!--search html end-->
+<!--table hear menu start -->
 <script type="text/html" id="headTool">
     <div class="layui-btn-container">
-        <button type="button" class="layui-btn  layui-btn-sm" lay-event="addUser"><i
+        <button type="button" class="layui-btn  layui-btn-sm" lay-event="addAuthEvent"><i
                     class="layui-icon"></i></button>
-        <button type="button" class="layui-btn layui-btn-danger layui-btn-sm" lay-event="delUsers"><i
+        <button type="button" class="layui-btn layui-btn-danger layui-btn-sm" lay-event="delAuthEvent"><i
                     class="layui-icon"></i></button>
-        <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="searchUsers">
+        <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="searchAuthEvent">
             <i class="layui-icon">&#xe615;</i></button>
-        <button type="button" class="layui-btn layui-btn-warm layui-btn-sm" lay-event="refreshUsers">
+        <button type="button" class="layui-btn layui-btn-warm layui-btn-sm" lay-event="refreshAuthEvent">
             <i class="layui-icon">&#xe669;</i></button>
 
     </div>
 </script>
+<!--table hear menu end -->
+<!-- Tab start-->
 <div class="layui-tab layui-tab-brief" lay-filter="authListTabBrief">
     <ul class="layui-tab-title">
         <li class="layui-this">权限列表</li>
@@ -95,17 +164,28 @@
     </ul>
     <div class="layui-tab-content" style="height: 100px;">
         <div class="layui-tab-item layui-show">
-            <table class="layui-hide" id="authTable" lay-filter="authTableFilter"></table>
+            <table class="layui-hide" id="authTablelistId" lay-filter="authTableFilter"></table>
         </div>
-        <div class="layui-tab-item">内容2</div>
+        <div class="layui-tab-item">
+            <div class="layui-btn-container">
+<!--                <button type="button" class="layui-btn layui-btn-sm" lay-demo="getChecked">获取选中节点数据</button>-->
+<!--                <button type="button" class="layui-btn layui-btn-sm" lay-demo="setChecked">勾选指定节点</button>-->
 
+                <button type="button" class="layui-btn layui-btn-sm" lay-demo="reload">重新加载</button>
+            </div>
+            <div id="authTree" class="demo-tree demo-tree-box" style="overflow: scroll;"></div>
+        </div>
     </div>
 </div>
-
+<!-- Tab end-->
+<!--list action start-->
 <script type="text/html" id="action">
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-xs" lay-event="editAuthEvent">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delAuthEvent">删除</a>
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="testAuthEvent">测试</a>
 </script>
+<!--list action end-->
+<!--ajax start-->
 <script>
     function ajaxRequest(url, data, type, isReload) {
         var index;
@@ -117,7 +197,9 @@
             cache: false,
             async: true,
             beforeSend: function () {
-                index = layer.load(1, {time: 2 * 1000});
+                var index = layer.load(1, {
+                    shade: [0.1, '#fff'], time: 2 * 1000 //0.1透明度的白色背景
+                });
             },
             complete: function () {
                 layer.close(index);
@@ -128,20 +210,91 @@
                 } else {
                     layer.msg(res.msg, {icon: 5});
                 }
-                layer.closeAll();
                 //表格重载
-                if (isReload) {
-                    layui.use('table', function () {
-                        var table = layui.table;
-                        table.reload('userTable', {
-                            where: {} //设定异步数据接口的额外参数
-                            //,height: 300
-                            , page: {
-                                curr: 1 //重新从第 1 页开始
-                            }
+                setTimeout(function () {
+                    if (isReload) {
+                        layui.use('table', function () {
+                            var table = layui.table;
+                            table.reload('authTableId', {
+                                where: {} //设定异步数据接口的额外参数
+                                //,height: 300
+                                , page: {
+                                    curr: 1 //重新从第 1 页开始
+                                }
+                            });
                         });
-                    });
-                }
+                    }
+                    layer.closeAll();
+                }, 1000)
+                return false;
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                layer.alert('网络失败，请刷新页面后重试', {icon: 2});
+            }
+        });
+    }
+
+    //添加权限加载 auth select option
+    function AddAuthAjaxgetAllAuthlist() {
+        $.ajax({
+            url: '{:url("auth/get_auth_all")}',
+            type: 'GET',
+            dataType: 'json',
+            data: {},
+            cache: false,
+            async: true,
+            beforeSend: function () {
+                layer.load(1, {
+                    shade: [0.1, '#fff'], time: 2 * 1000 //0.1透明度的白色背景
+                });
+            },
+            complete: function () {
+                layer.close('loading');
+            },
+            success: function (res) {
+                $("#parent_id").html(res.auths);
+                //刷新select选择框渲染
+                layui.use('form', function () {
+                    var form = layui.form;
+                    form.render('select');
+                })
+                return false;
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                layer.alert('网络失败，请刷新页面后重试', {icon: 2});
+            }
+        });
+    }
+
+    //编辑加载auth to to html option
+    /**
+     * 编辑权限加载 auth select option
+     * @param editId 编辑的哪一个ID
+     * @param checkedID 默认选中的ID
+     */
+    function editAuthAjaxgetAllAuthlist(checkedID, editID) {
+        $.ajax({
+            url: '{:url("auth/get_auth_all")}',
+            type: 'GET',
+            dataType: 'json',
+            data: {check_id: checkedID, edit_id: editID},
+            cache: false,
+            async: true,
+            beforeSend: function () {
+                layer.load(2, {
+                    shade: [0.1, '#fff'], time: 2 * 1000 //0.1透明度的白色背景
+                });
+            },
+            complete: function () {
+                layer.closeAll('loading');
+            },
+            success: function (res) {
+                $("#edit_parent_id").html(res.auths);
+                //刷新select选择框渲染
+                layui.use('form', function () {
+                    var form = layui.form;
+                    form.render('select');
+                })
                 return false;
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -150,47 +303,230 @@
         });
     }
 </script>
+<!--ajax end-->
+<!--tab start-->
 <script>
-    layui.use('element', function(){
-        var $ = layui.jquery
-            ,element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
-        //触发事件
-        element.on('tab(authListTabBrief)', function(data){
-            console.log(data);
-            console.log(this); //当前Tab标题所在的原始DOM元素
-            console.log(data.index); //得到当前Tab的所在下标
-            console.log(data.elem); //得到当前的Tab大容器
+    //重置编辑表单
+    function resetEditFrom() {
+        layui.use('form', function () {
+            var form = layui.form;
+            //表单初始复制
+            form.val("editAuthForm", {
+                "name": ''
+                , "title": ''
+                , "status": 'on'
+                , "method": ''
+                , "condition": ''
+                // , "parent_id": data.parent_id
+                , 'id': ''
+            });
         });
+    }
 
+    //tab
+    layui.use(['tree', 'util', 'element'], function () {
+        var $ = layui.jquery
+            , element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+        var tree = layui.tree
+            , layer = layui.layer
+            , util = layui.util;
+
+        //加载树形表格数据
+        function loadTree() {
+            $.ajax({
+                url: '{:url("auth/get_auth_all/treejson")}',
+                type: 'GET',
+                dataType: 'json',
+                data: {},
+                cache: false,
+                async: true,
+                beforeSend: function () {
+                    layer.load(2, {
+                        shade: [0.1, '#fff'], time: 2 * 1000 //0.1透明度的白色背景
+                    });
+                },
+                complete: function () {
+                    layer.closeAll();
+                },
+                success: function (res) {
+                    // console.log(res.auths);
+                    tree.render({
+                        elem: '#authTree'
+                        , data: res.auths
+                        , id: 'authTreeId'
+                        , showCheckbox: true
+                        , isJump: true  //link 为参数匹配
+                        , onlyIconControl: true  //是否仅允许节点左侧图标控制展开收缩
+                        // ,showLine: false  //是否开启连接线
+                        , edit: ['add', 'del'] //操作节点的图标
+                        , click: function (obj) {
+                            var data = obj.data;  //获取当前点击的节点数据
+                            // console.log(data);
+                            // console.log('状态：'+ obj.state);
+                            // layer.msg('状态：'+ obj.state + '<br>节点数据：' + JSON.stringify(data));
+                            layer.confirm('纳尼？', {
+                                btn: ['编辑', '删除', '取消'] //可以无限个按钮
+                                , btn3: function (index, layero) {
+                                    //按钮【按钮三】的回调
+                                    resetEditFrom();
+                                    console.log('取消');
+                                }
+                            }, function (index, layero) {
+                                //按钮【按钮一】的回调
+                                // console.log('编辑');
+                                //创建树形节点
+                                if (data.title != '未命名' && data.auth_title != 'undefined') {
+                                    //编辑数形节点 填充数据
+                                    layui.use('form', function () {
+                                        var form = layui.form;
+                                        editAuthAjaxgetAllAuthlist(data.parent_id, data.id);
+                                        //表单初始复制
+                                        form.val("editAuthForm", {
+                                            "name": data.auth_name
+                                            , "title": data.auth_title
+                                            , "status": (data.auth_status == '禁用') ? '' : 'on'
+                                            , "method": data.method
+                                            , "condition": data.condition
+                                            // , "parent_id": data.parent_id
+                                            , 'id': data.id
+                                        });
+                                    });
+                                    layer.open({
+                                        type: 1,
+                                        area: '500px',
+                                        title: '编辑权限',
+                                        shadeClose: true,
+                                        content: $('#editAuthDiv'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                                        yes: function(index, layero){
+                                            layer.msg('yes');
+                                            return false;
+                                        },
+                                        cancel: function(index, layero){
+                                            layer.msg('cancel');
+                                            return false;
+                                        }
+                                        , end : function(index, layero){
+                                            resetEditFrom();
+                                            loadTree();
+                                            return false;
+                                        }
+                                    });
+                                } else {
+                                    AddAuthAjaxgetAllAuthlist();
+                                    layer.open({
+                                        type: 1,
+                                        area: '500px',
+                                        title: '添加权限',
+                                        shadeClose: true,
+                                        content: $('#addAuthDiv'),
+                                        yes: function(index, layero){
+                                            layer.msg('yes');
+                                            return false;
+                                        },
+                                        cancel: function(index, layero){
+                                            layer.msg('cancel');
+                                        }
+                                        , end : function(index, layero){
+                                            resetEditFrom();
+                                            loadTree();
+                                            return false;
+                                        }
+                                    });
+                                }
+                                return false;
+
+                            }, function (index) {
+                                // console.log('删除');
+                                //按钮【按钮二】的回调
+                                if (data.title != '未命名' && data.auth_title != 'undefined') {
+                                    ajaxRequest('{:url("auth/ajax_del_auth")}', {id: data.id}, 'post');
+                                }
+                            });
+
+                        }
+                        , operate: function (obj) {
+                            var type = obj.type; //得到操作类型：add、edit、del
+                            var data = obj.data; //得到当前节点的数据
+                            var elem = obj.elem; //得到当前节点元素
+                            // console.log(type);
+                            // console.log(data);
+                            //Ajax 操作
+                            var id = data.id; //得到节点索引
+                            if (type === 'add') { //增加节点
+                                //返回 key 值
+                                return 123;
+                            } else if (type === 'update') { //修改节点
+                                // console.log(elem.find('.layui-tree-txt').html()); //得到修改后的内容
+                                return 123;
+                            } else if (type === 'del') { //删除节点
+                                if (data.title != '未命名' && data.auth_title != 'undefined') {
+                                    ajaxRequest('{:url("auth/ajax_del_auth")}', {id: data.id}, 'post');
+                                }
+                            }
+                            ;
+                        }
+                    });
+                    return false;
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    layer.alert('网络失败，请刷新页面后重试', {icon: 2});
+                }
+            });
+        };
+
+        util.event('lay-demo', {
+            getChecked: function (othis) {
+                var checkedData = tree.getChecked('authTreeId'); //获取选中节点的数据
+                layer.alert(JSON.stringify(checkedData), {shade: 0});
+                // console.log(checkedData);
+            }
+            , setChecked: function () {
+                tree.setChecked('authTreeId', [12, 16]); //勾选指定节点
+            }
+            , reload: function () {
+                //重载实例
+                layer.msg('重载实例');
+                loadTree();
+                // tree.reload('authTreeId', {
+                //     where: {} //设定异步数据接口的额外参数
+                //     //,height: 300
+                //     , page: {
+                //         curr: 1 //重新从第 1 页开始
+                //     }
+                // });
+            }
+        });
+        //监听tab切换事件
+        element.on('tab(authListTabBrief)', function (data) {
+            //开启节点操作图标
+            if (data.index == 1) {
+                loadTree();
+            }
+        });
     });
 </script>
+<!--tab end-->
 <script>
-    //tab
-
     //监听表单提交事件
     layui.use('form', function () {
         var form = layui.form;
         //监听提交
-        form.on('submit(addUser)', function (data) {
-            ajaxRequest('{:url("auth/ajaxAddUser")}', data.field, 'POST', true);
+        form.on('submit(addAuthSubmitFilter)', function (data) {
+            ajaxRequest('{:url("auth/ajax_add_auth")}', data.field, 'POST', true);
 //            layer.msg(JSON.stringify(data.field));
             return false;
         });
 
-        form.on('submit(editUser)', function (data) {
-            //没有填写密码 视为不更新密码
-            if(data.field.password.length == 0 ) delete data.field.password;
-//            console.log(data);
-            ajaxRequest('{:url("auth/ajaxEditUser")}', data.field, 'POST', true);
+        form.on('submit(editAuthSubmitFilter)', function (data) {
+            // console.log(data);
+            ajaxRequest('{:url("auth/ajax_edit_auth")}', data.field, 'POST', true);
 //            layer.msg(JSON.stringify(data.field));
             return false;
         });
-        form.on('submit(searchUser)', function (data) {
-//            ajaxRequest('{:url("auth/ajaxGetUserList")}', data.field, 'POST', true);
-//            layer.msg(JSON.stringify(data.field));
+        form.on('submit(searchAuthSubmit)', function (data) {
             layui.use('table', function () {
                 var table = layui.table;
-                table.reload('userTable', {
+                table.reload('authTableId', {
                     where: {
                         search: data.field.search
                     }
@@ -209,33 +545,30 @@
         var table = layui.table;
         //表格渲染
         table.render({
-            elem: '#authTable'
-            , url: '{:url("auth/ajaxGetAuthList")}'
+            elem: '#authTablelistId'
+            , url: '{:url("auth/ajax_get_auth_list")}'
             , toolbar: '#headTool'
-            , title: '用户数据表'
+            , title: '权限列表'
             , cols: [[
                 {type: 'checkbox', fixed: 'left'}
-                , {field: 'id', title: 'ID', width: 100, fixed: 'left', unresize: true, sort: true, align:'center'}
-                , {field: 'user_name', title: '用户名', width: 150, edit: 'text', align:'center'}
+                , {field: 'id', title: 'ID', width: 60, fixed: 'left', unresize: true, sort: true, align: 'center'}
+                , {field: 'name', title: '规则', width: 260, edit: 'text', align: 'center', sort: true}
                 , {
-                    field: 'email', title: '邮箱', width: 200, edit: 'text', templet: function (res) {
-                        return '<em>' + res.email + '</em>'
-                    }, align:'center'
+                    field: 'title', title: '权限名称', width: 260, edit: 'text', templet: function (res) {
+                        return '<em>' + res.title + '</em>'
+                    }, align: 'left'
                 }
-                , {field: 'sex', title: '性别', width: 140, edit: 'text', sort: true, align:'center'}
-                // ,{field:'city', title:'城市', width:100}
-                , {field: 'status', title: '状态', width: 120, align:'center'}
-                , {field: 'experience', title: '积分', width: 80, sort: true, align:'center'}
-                , {field: 'ip', title: 'IP', align:'center', width: 200}
-                , {field: 'login_count', title: '登入次数', width: 120, sort: true, align:'center'}
-                , {field: 'created_at', title: '加入时间', width: 200, align:'center'}
-                , {fixed: 'right', title: '操作', toolbar: '#action', width: 300, align:'center'}
+                , {field: 'method', title: '请求方式', width: 120, align: 'center'}
+                , {field: 'status', title: '状态', width: 120, align: 'center', sort: true}
+                , {field: 'condition', title: '规则表达式', align: 'center', width: 300}
+                , {field: 'created_at', title: '创建时间', width: 240, align: 'center', sort: true}
+                , {fixed: 'right', title: '操作', toolbar: '#action', align: 'center'}
             ]]
             , page: true
-            , id: 'userTable'
+            , id: 'authTableId'
             , height: 'full-30'
             , cellMinWidth: 80
-            , limit: 30
+            , limit: {$limit}
             , text: {
                 none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
             }
@@ -244,50 +577,54 @@
         });
 
         //监听表格头部头工具栏事件
-        table.on('toolbar(userTable)', function (obj) {
+        table.on('toolbar(authTableFilter)', function (obj) {
             var checkStatus = table.checkStatus(obj.config.id);
             switch (obj.event) {
-                case 'addUser':
+                case 'addAuthEvent':
+                    //加载所有的权限规则 selete option
+                    AddAuthAjaxgetAllAuthlist();
                     layer.open({
                         type: 1,
                         area: '500px',
-                        title: '添加用户',
+                        title: '添加权限',
                         shadeClose: true,
-                        content: $('#addUser') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                        content: $('#addAuthDiv') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
                     });
                     break;
-                case 'delUsers':
+                case 'delAuthEvent':
                     var data = checkStatus.data;
-                    if(data.length == 0 ){
-                        layer.msg('选中了：' + data.length + ' 个'); return;
+                    if (data.length == 0) {
+                        layer.msg('选中了：' + data.length + ' 个');
+                        return;
                     }
                     var ids = '';
-                    $.each(data,function (k,val) {
+                    $.each(data, function (k, val) {
                         ids += val.id + ',';
                     });
-                    ids = ids.substring(0,ids.length-1);
-
-                    ajaxRequest('{:url("auth/ajaxDelUser")}', {id:ids}, 'post',true);
-                    layer.msg('选中了：' + data.length + ' 个');
+                    ids = ids.substring(0, ids.length - 1);
+                    layer.confirm('真的删除' + data.length + '行么', function (index) {
+                        ajaxRequest('{:url("auth/ajax_del_auth")}', {id: ids}, 'post', true);
+                    });
                     break;
-                case 'searchUsers':
+                case 'searchAuthEvent':
                     layer.open({
                         type: 1,
                         area: '500px',
                         title: '搜索',
                         shadeClose: true,
-                        content: $('#search') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                        content: $('#searchDiv') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
                     });
                     break;
-                case 'refreshUsers':
+                case 'refreshAuthEvent':
                     layui.use('table', function () {
                         var table = layui.table;
-                        table.reload('userTable', {
-                            where: {}
-                            //,height: 300
+                        table.reload('authTableId', {
+                            where: {
+                                search: ''
+                            }
                             , page: {
                                 curr: obj.config.page.curr //重新从第 1 页开始
-                                ,limit:obj.config.page.limit
+                                , limit: obj.config.page.limit
                             }
                         });
                     });
@@ -297,48 +634,46 @@
         });
 
         //监听行工具事件
-        table.on('tool(userTable)', function (obj) {
+        table.on('tool(authTableFilter)', function (obj) {
                 var data = obj.data;
-                if (obj.event === 'del') {
+                if (obj.event === 'delAuthEvent') {
                     layer.confirm('真的删除行么', function (index) {
-                        ajaxRequest('{:url("auth/delUser")}', {id:data.id}, 'post');
+                        ajaxRequest('{:url("auth/ajax_del_auth")}', {id: data.id}, 'post');
                         obj.del();
                         layer.close(index);
                     });
-                } else if (obj.event === 'edit') {
-                    data.status = (data.status == '正常') ? 'on' : '';
-                    data.sex = (data.sex == '女') ? 2 : 1;
+                } else if (obj.event === 'editAuthEvent') {
+                    data.status = (data.status == '开启') ? 'on' : '';
+                    // console.log(data);
+                    //加载所有的权限规则 selete option
+                    editAuthAjaxgetAllAuthlist(data.parent_id, data.id);
                     layui.use('form', function () {
                         var form = layui.form;
                         //表单初始复制
-                        form.val("editForm", {
-                            "user_name":  data.user_name
-                            ,"email": data.email
-                            ,"status": data.status
-                            ,"sex": data.sex
-                            ,'id':data.id
+                        // var item = $("select[name='parent_id'] option[value=26]").attr("selected", true);//设置Select的Text值为jQuery的项选中
+                        // var item = $(".layui-select-group  dd[lay-alue='26']").attr("selected", true);   //设置Select的Text值为jQuery的项选中
+                        form.val("editAuthForm", {
+                            "name": data.name
+                            , "title": data.title
+                            , "status": data.status
+                            , "method": data.method
+                            , "condition": data.condition
+                            , 'id': data.id
+                            // , 'parent_id': data.parent_id
                         });
                     });
                     layer.open({
                         type: 1,
                         area: '500px',
-                        title: '编辑用户',
+                        title: '编辑权限',
                         shadeClose: true,
-                        content: $('#editUser') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                        content: $('#editAuthDiv') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
                     });
-//                layer.prompt({
-//                    formType: 2
-//                    , value: data.email
-//                }, function (value, index) {
-//                    obj.update({
-//                        email: value
-//                    });
-//                    layer.close(index);
-//                });
+                } else if (obj.event === 'testAuthEvent') {
+                    layer.msg('开发中...有兴趣+Q554665488');
                 }
             }
         );
-
     });
 </script>
 </body>

@@ -40,10 +40,45 @@ class ArrayHelp
                 $returnArr[$index] = $datum;
                 unset($data[$index]);
                 $children = $this->getTree($data, $datum[$this->primary], $level + 1);
-                if (!empty($children)) $returnArr[$index]['children'] =$children;
+                if (!empty($children)) $returnArr[$index]['children'] = $children;
             }
         }
         return $returnArr;
+    }
+
+    //引用算法生成树状结构数据
+    public function generateTree(array $data)
+    {
+        //第一步 构造数据
+//        $data = array(
+//            array('id' => 1, 'parent_id' => 0, 'name' => '河北省'),
+//            array('id' => 2, 'parent_id' => 0, 'name' => '北京市'),
+//            array('id' => 3, 'parent_id' => 1, 'name' => '邯郸市'),
+//            array('id' => 4, 'parent_id' => 2, 'name' => '朝阳区'),
+//            array('id' => 5, 'parent_id' => 2, 'name' => '通州区'),
+//            array('id' => 6, 'parent_id' => 4, 'name' => '望京'),
+//            array('id' => 7, 'parent_id' => 4, 'name' => '酒仙桥'),
+//            array('id' => 8, 'parent_id' => 3, 'name' => '永年区'),
+//            array('id' => 9, 'parent_id' => 1, 'name' => '武安市'),
+//        );
+
+        $items = array();
+        foreach ($data as $value) {
+            $items[$value['id']] = $value;
+        }
+//        dump($items);die;
+        $tree = array();
+        foreach ($items as $id => $item) {
+            //如果Pid节点存在$items 中 说明 这个$item元素属于这个 $items[$id]
+            if (isset($items[$item[$this->parent_id]])) {
+//                dump($items[$item[$this->parent_id]]);
+//                $items[$id]['level'] =isset($items[$item[$this->parent_id]]['level']) ? $items[$item[$this->parent_id]]['level'] + 1  : 0;
+                $items[$item[$this->parent_id]]['chilren'][] = &$items[$id];
+            } else {
+                $tree[] =& $items[$id];
+            }
+        }
+        return $tree;
     }
 
     /**
@@ -76,7 +111,7 @@ class ArrayHelp
                 ];
                 unset($data[$index]);
                 $children = $this->getTreeLayuiData($data, $datum[$this->primary], $level + 1);
-                if (!empty($children)) $returnArr[$index]['children'] =array_merge($children);
+                if (!empty($children)) $returnArr[$index]['children'] = array_merge($children);
             }
         }
         return $returnArr;

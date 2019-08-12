@@ -119,8 +119,8 @@ class Auth extends Base
     {
         if ($this->request->isGet()) {
             $authModel = new AuthModel();
-//            $auths = $authModel ->getAllAuths('getList');
-//            dump($auths);die;
+            $auths = $authModel ->getAllAuths('makeTreeLevel');
+            dump($auths);die;
             if(Request::has('type') and Request::param('type') == 'treejson'){
                 $auths = $authModel ->getAllAuths('getTreeLayuiData');
                 return ['auths'=> $auths];

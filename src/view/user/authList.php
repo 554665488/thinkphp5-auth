@@ -554,21 +554,21 @@
                 , {field: 'id', title: 'ID', width: 60, fixed: 'left', unresize: true, sort: true, align: 'center'}
                 , {field: 'name', title: '规则', width: 260, edit: 'text', align: 'center', sort: true}
                 , {
-                    field: 'title', title: '权限名称', width: 260, edit: 'text', templet: function (res) {
+                    field: 'title', title: '权限名称', width: 150, edit: 'text', templet: function (res) {
                         return '<em>' + res.title + '</em>'
                     }, align: 'left'
                 }
-                , {field: 'method', title: '请求方式', width: 120, align: 'center'}
-                , {field: 'status', title: '状态', width: 120, align: 'center', sort: true}
-                , {field: 'condition', title: '规则表达式', align: 'center', width: 300}
-                , {field: 'created_at', title: '创建时间', width: 240, align: 'center', sort: true}
+                , {field: 'method', title: '请求方式', align: 'center'}
+                , {field: 'status', title: '状态', align: 'center', sort: true}
+                , {field: 'condition', title: '规则表达式', align: 'center'}
+                , {field: 'created_at', title: '创建时间',  align: 'center', sort: true}
                 , {fixed: 'right', title: '操作', toolbar: '#action', align: 'center'}
             ]]
             , page: true
             , id: 'authTableId'
             , height: 'full-30'
             , cellMinWidth: 80
-            , limit: {$limit}
+            , limit: '{$limit}'
             , text: {
                 none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
             }

@@ -177,7 +177,7 @@
                     if (isReload) {
                         layui.use('table', function () {
                             var table = layui.table;
-                            table.reload('userTableRelod', {
+                            table.reload('userTableReload', {
                                 where: {} //设定异步数据接口的额外参数
                                 //,height: 300
                                 , page: {
@@ -221,7 +221,7 @@
 //            layer.msg(JSON.stringify(data.field));
             layui.use('table', function () {
                 var table = layui.table;
-                table.reload('userTableRelod', {
+                table.reload('userTableReload', {
                     where: {
                         search: data.field.search
                     }
@@ -249,24 +249,24 @@
                 , {field: 'id', title: 'ID', width: 100, fixed: 'left', unresize: true, sort: true, align:'center'}
                 , {field: 'user_name', title: '用户名', width: 150, edit: 'text', align:'center'}
                 , {
-                    field: 'email', title: '邮箱', width: 200, edit: 'text', templet: function (res) {
+                    field: 'email', title: '邮箱',  edit: 'text', width:200, templet: function (res) {
                         return '<em>' + res.email + '</em>'
                     }, align:'center'
                 }
-                , {field: 'sex', title: '性别', width: 140, edit: 'text', sort: true, align:'center'}
+                , {field: 'sex', title: '性别',  edit: 'text', sort: true, align:'center'}
                 // ,{field:'city', title:'城市', width:100}
-                , {field: 'status', title: '状态', width: 120, align:'center'}
-                , {field: 'experience', title: '积分', width: 80, sort: true, align:'center'}
-                , {field: 'ip', title: 'IP', align:'center', width: 200}
-                , {field: 'login_count', title: '登入次数', width: 120, sort: true, align:'center'}
-                , {field: 'created_at', title: '加入时间', width: 200, align:'center'}
+                , {field: 'status', title: '状态',  align:'center'}
+                , {field: 'experience', title: '积分',  sort: true, align:'center'}
+                , {field: 'ip', title: 'IP', align:'center'}
+                , {field: 'login_count', title: '登入次数', sort: true, align:'center'}
+                , {field: 'created_at', title: '加入时间', align:'center'}
                 , {fixed: 'right', title: '操作', toolbar: '#action', align:'center'}
             ]]
             , page: true
-            , id: 'userTableRelod' //重载表格
+            , id: 'userTableReload' //重载表格
             , height: 'full-30'
             , cellMinWidth: 80
-            , limit: {$limit}
+            , limit: '{$limit}' //使用配置的数量 默认30
             , text: {
                 none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
             }
@@ -314,7 +314,7 @@
                 case 'refreshUsersEvent':
                     layui.use('table', function () {
                         var table = layui.table;
-                        table.reload('userTableRelod', {
+                        table.reload('userTableReload', {
                             where: {
                                 search: ''
                             }
@@ -334,7 +334,7 @@
                 var data = obj.data;
                 if (obj.event === 'del') {
                     layer.confirm('真的删除行么', function (index) {
-                        ajaxRequest('{:url("auth/ajaxDelUser")}', {id:data.id}, 'post');
+                        ajaxRequest('{:url("auth/ajax_del_user")}', {id:data.id}, 'post');
                         obj.del();
                         layer.close(index);
                     });

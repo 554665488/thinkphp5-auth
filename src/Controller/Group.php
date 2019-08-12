@@ -13,6 +13,7 @@ use think\facade\Config;
 use think\facade\Request;
 use thinkAuth\Config\AuthBase;
 use thinkAuth\Model\AuthModel;
+use thinkAuth\Model\GroupModel;
 
 /**
  * Class Auth
@@ -49,9 +50,9 @@ class Group extends Base
     public function ajaxGetGroupList()
     {
         if ($this->request->isAjax()) {
-            $authModel = new AuthModel();
-            $auths = $authModel->getAuthsByPage();
-            return $this->returnLayuiTableJson($auths, $authModel->getAuthsCount());
+            $groupModel = new GroupModel();
+            $auths = $groupModel->getGroupsByPage();
+            return $this->returnLayuiTableJson($auths->toArray(), $groupModel->getGroupCount());
         }
     }
 
@@ -65,9 +66,9 @@ class Group extends Base
     public function ajaxAddGroup()
     {
         if ($this->request->isPost()) {
-            $authModel = new AuthModel();
-            $authId = $authModel->createAuth();
-            if ($authId) return $this->ajaxSuccess();
+            $groupModel = new GroupModel();
+            $groupNewId = $groupModel->createAuth();
+            if ($groupNewId) return $this->ajaxSuccess();
             return $this->ajaxFail();
         }
     }

@@ -12,29 +12,18 @@
 
 </head>
 <body>
-<!--add user html start-->
-<div id="addUserDiv" style="display: none">
+<!--add group html start-->
+<div id="addGroupDiv" style="display: none">
     <form class="layui-form" lay-filter="addUserForm">
         <div class="layui-form-item">
-            <label class="layui-form-label">用户名</label>
+            <label class="layui-form-label">用户组名</label>
             <div class="layui-input-block" style="width: 300px">
-                <input type="text" name="user_name" required lay-verify="required" placeholder="请输入用户名"
+                <input type="text" name="user_name" required lay-verify="required" placeholder="请输入用户组名"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">邮箱</label>
-            <div class="layui-input-block" style="width: 300px">
-                <input type="text" name="email" required placeholder="请输入邮箱" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">密码</label>
-            <div class="layui-input-inline">
-                <input type="password" name="password" required lay-verify="required" placeholder="请输入密码"
-                       autocomplete="off" class="layui-input">
-            </div>
-        </div>
+
+
 
         <div class="layui-form-item">
             <label class="layui-form-label">状态</label>
@@ -42,13 +31,7 @@
                 <input type="checkbox" name="status" lay-skin="switch" lay-text="开启|禁用">
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">性别</label>
-            <div class="layui-input-block">
-                <input type="radio" name="sex" value="1" title="男" id="man">
-                <input type="radio" name="sex" value="2" title="女" id='woman'>
-            </div>
-        </div>
+
         <div class="layui-form-item">
             <div class="layui-input-block">
                 <button class="layui-btn" lay-submit lay-filter="addUserSubmit">立即提交</button>
@@ -57,54 +40,10 @@
         </div>
     </form>
 </div>
-<!--add user html end-->
-<!--edit user html start-->
-<div id="editUserDiv" style="display: none">
-    <form class="layui-form" lay-filter="editForm">
-        <div class="layui-form-item">
-            <label class="layui-form-label">用户名</label>
-            <div class="layui-input-block" style="width: 300px">
-                <input type="text" name="user_name" required lay-verify="required" placeholder="请输入用户名"
-                       autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">邮箱</label>
-            <div class="layui-input-block" style="width: 300px">
-                <input type="text" name="email" required placeholder="请输入邮箱" autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">密码</label>
-            <div class="layui-input-inline">
-                <input type="password" name="password"  placeholder="请输入密码"
-                       autocomplete="off" class="layui-input">
-            </div>
-        </div>
+<!--add group html end-->
+<!--edit group html start-->
 
-        <div class="layui-form-item">
-            <label class="layui-form-label">状态</label>
-            <div class="layui-input-block">
-                <input type="checkbox" name="status" lay-skin="switch" lay-text="开启|禁用">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">性别</label>
-            <div class="layui-input-block">
-                <input type="radio" name="sex" value="1" title="男" id="man">
-                <input type="radio" name="sex" value="2" title="女" id='woman'>
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-input-block">
-                <input type="hidden" value="" name="id" id="user_id"/>
-                <button class="layui-btn" lay-submit lay-filter="editUserSubmit">立即提交</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-            </div>
-        </div>
-    </form>
-</div>
-<!--edit user html end-->
+<!--edit group html end-->
 <!--search html start-->
 <div id="searchDiv" style="display: none">
     <form class="layui-form" lay-filter="searchForm">
@@ -127,21 +66,47 @@
 <!--table head tools html start-->
 <script type="text/html" id="headTool">
     <div class="layui-btn-container">
-
-        <button type="button" class="layui-btn  layui-btn-sm" lay-event="addUserEvent"><i
+        <button type="button" class="layui-btn  layui-btn-sm" lay-event="addGroupEvent"><i
                     class="layui-icon"></i></button>
         <!--        <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" lay-event="getCheckData"><i class="layui-icon"></i></button>-->
-        <button type="button" class="layui-btn layui-btn-danger layui-btn-sm" lay-event="delUsersEvent"><i
+        <button type="button" class="layui-btn layui-btn-danger layui-btn-sm" lay-event="delGroupEvent"><i
                     class="layui-icon"></i></button>
-        <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="searchUsersEvent">
+        <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="searchGroupEvent">
             <i class="layui-icon">&#xe615;</i></button>
-        <button type="button" class="layui-btn layui-btn-warm layui-btn-sm" lay-event="refreshUsersEvent">
+        <button type="button" class="layui-btn layui-btn-warm layui-btn-sm" lay-event="refreshGroupEvent">
             <i class="layui-icon">&#xe669;</i></button>
 
     </div>
 </script>
+<div class="layui-form">
+    <div class="layui-fluid">
+        <div class="layui-form layui-col-md12">
+            <div class="layui-form-item">
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">城市<span style="color:red">●</span></label>
+                    <div class="layui-input-block">
+                        <select name="select_base_cityname" id="select_base_cityname" lay-filter="select_base_cityname" xm-select="select_base_cityname" xm-select-type="1">
+                            <option value=""></option>
+                            <option value="1">北京</option>
+                            <option value="2">上海</option>
+                            <option value="3">天津</option>
+                            <option value="4">重庆</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row ">
+                <div class="test-table-reload-btn" style="margin-bottom: 10px;">
+                    <button type="button" class="layui-btn layui-btn-danger" lay-submit lay-filter="btn_submit" id="btn_submit"><i class="layui-icon">&#xe681</i>获取</button>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <!--table head tools html end-->
-<table class="layui-hide" id="userTableId" lay-filter="userTableFilter"></table>
+<!--<table class="layui-hide" id="groupTableHtmlId" lay-filter="groupTableFilter"></table>-->
 <!--table list action start-->
 <script type="text/html" id="action">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
@@ -240,33 +205,23 @@
         var table = layui.table;
         //表格渲染
         table.render({
-            elem: '#userTableId'
-            , url: '{:url("auth/ajax_get_user_list")}'
+            elem: '#groupTableHtmlId'
+            , url: '{:url("auth/ajax_get_group_list")}'
             , toolbar: '#headTool'
             , title: '用户数据表'
             , cols: [[
                 {type: 'checkbox', fixed: 'left'}
                 , {field: 'id', title: 'ID', width: 100, fixed: 'left', unresize: true, sort: true, align:'center'}
-                , {field: 'user_name', title: '用户名', width: 150, edit: 'text', align:'center'}
-                , {
-                    field: 'email', title: '邮箱', width: 200, edit: 'text', templet: function (res) {
-                        return '<em>' + res.email + '</em>'
-                    }, align:'center'
-                }
-                , {field: 'sex', title: '性别', width: 140, edit: 'text', sort: true, align:'center'}
-                // ,{field:'city', title:'城市', width:100}
-                , {field: 'status', title: '状态', width: 120, align:'center'}
-                , {field: 'experience', title: '积分', width: 80, sort: true, align:'center'}
-                , {field: 'ip', title: 'IP', align:'center', width: 200}
-                , {field: 'login_count', title: '登入次数', width: 120, sort: true, align:'center'}
-                , {field: 'created_at', title: '加入时间', width: 200, align:'center'}
+                , {field: 'title', title: '用户组名称', edit: 'text', sort: true, align:'center'}
+                , {field: 'status', title: '状态', align:'center'}
+                , {field: 'created_at', title: '创建时间', align:'center'}
                 , {fixed: 'right', title: '操作', toolbar: '#action', align:'center'}
             ]]
             , page: true
-            , id: 'userTableRelod' //重载表格
+            , id: 'groupTableReload' //重载表格
             , height: 'full-30'
             , cellMinWidth: 80
-            , limit: {$limit}
+            , limit: '{$limit}'
             , text: {
                 none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
             }

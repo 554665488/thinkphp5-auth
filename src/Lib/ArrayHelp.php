@@ -50,29 +50,24 @@ class ArrayHelp
     public function generateTree(array $data)
     {
         //第一步 构造数据
-//        $data = array(
-//            array('id' => 1, 'parent_id' => 0, 'name' => '河北省'),
-//            array('id' => 2, 'parent_id' => 0, 'name' => '北京市'),
-//            array('id' => 3, 'parent_id' => 1, 'name' => '邯郸市'),
-//            array('id' => 4, 'parent_id' => 2, 'name' => '朝阳区'),
-//            array('id' => 5, 'parent_id' => 2, 'name' => '通州区'),
-//            array('id' => 6, 'parent_id' => 4, 'name' => '望京'),
-//            array('id' => 7, 'parent_id' => 4, 'name' => '酒仙桥'),
-//            array('id' => 8, 'parent_id' => 3, 'name' => '永年区'),
-//            array('id' => 9, 'parent_id' => 1, 'name' => '武安市'),
-//        );
-
+        //$data = array(
+        // array('id' => 1, 'parent_id' => 0, 'name' => '河北省'),
+        // array('id' => 2, 'parent_id' => 0, 'name' => '北京市'),
+        // array('id' => 3, 'parent_id' => 1, 'name' => '邯郸市'),
+        // array('id' => 4, 'parent_id' => 2, 'name' => '朝阳区'),
+        // array('id' => 5, 'parent_id' => 2, 'name' => '通州区'),
+        // array('id' => 6, 'parent_id' => 4, 'name' => '望京'),
+        // array('id' => 7, 'parent_id' => 4, 'name' => '酒仙桥'),
+        // array('id' => 8, 'parent_id' => 3, 'name' => '永年区'),
+        // array('id' => 9, 'parent_id' => 1, 'name' => '武安市'),
+        //);
         $items = array();
         foreach ($data as $value) {
             $items[$value['id']] = $value;
         }
-//        dump($items);die;
         $tree = array();
         foreach ($items as $id => $item) {
-            //如果Pid节点存在$items 中 说明 这个$item元素属于这个 $items[$id]
             if (isset($items[$item[$this->parent_id]])) {
-//                dump($items[$item[$this->parent_id]]);
-//                $items[$id]['level'] =isset($items[$item[$this->parent_id]]['level']) ? $items[$item[$this->parent_id]]['level'] + 1  : 0;
                 $items[$item[$this->parent_id]]['chilren'][] = &$items[$id];
             } else {
                 $tree[] =& $items[$id];
@@ -152,7 +147,8 @@ class ArrayHelp
      */
     public function getTreeToHtmlOption(array $data)
     {
-        if (empty($data)) return $data;
+        if (empty($data)) return "<option  value= '0'>顶级</option>";
+
         //是否默认选中某一个元素
         $check_id = $_GET['check_id'] ?? false;
         $optionHtml = "<option value=''>直接选择或搜索选择</option>";
@@ -162,6 +158,7 @@ class ArrayHelp
         } else {
             $optionHtml .= "<option  value= '0'>顶级</option>";
         }
+
         $dataList = $this->getList($data);
         foreach ($dataList as $index => $datum) {
             if ($datum['id'] == $check_id) {

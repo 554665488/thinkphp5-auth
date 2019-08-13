@@ -33,7 +33,7 @@ class GroupModel extends Model
     {
         parent::__construct($data);
 
-        $this->table = !empty(Config::get('auth.table.auth_group')) ? Config::get('auth.table.auth_group') : 'y_auth_group';
+        $this->table = !empty($authGroup = Config::get('auth.table.auth_group')) ? $authGroup : 'auth_group';
     }
 
     /**

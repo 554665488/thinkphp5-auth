@@ -1,8 +1,9 @@
 <?php
 
-use Phinx\Migration\AbstractMigration;
+use think\migration\Migrator;
+use think\migration\db\Column;
 
-class AuthGroup extends AbstractMigration
+class UserRole extends Migrator
 {
     /**
      * Change Method.
@@ -27,13 +28,14 @@ class AuthGroup extends AbstractMigration
      */
     public function change()
     {
-        $table = $this->table('auth_group',array('engine' => 'InnoDB', 'CHARSET' => 'utf8', 'comment' => '用户组表'));
+        $table = $this->table('user_role', array('engine'=>'InnoDB','CHARSET'=>'utf8', 'comment' => '系统用户角色表'));
         if ($table->exists()) $table->drop();
         $table->addTimestamps()
-            ->addColumn('title', 'string', array('limit' => 32, 'null'=> false, 'default' => '', 'comment' => '用户组中文名称'))
+            ->addColumn('name', 'string', array('limit' => 32, 'null' => false, 'default' => '', 'comment' => '角色名字'))
             ->addColumn('status', 'boolean', array('limit' => 1, 'null'=> false, 'default' => 0, 'comment' => '状态：为1正常，为0禁用'))
-            //->addColumn('rules', 'string', array('limit' => 100, 'null'=> false, 'default' => '', 'comment' => '用户组拥有的规则id'))
-//            ->addIndex(array('rules'))
+            ->addColumn('level', 'integer', array('limit' => 5, 'null' => false, 'default' => 1, 'comment' => '角色级别'))
+            ->addColumn('parent_id', 'integer', array('limit' => 5, 'null' => false, 'default' => 1, 'comment' => '当前角色的上一级角色ID'))
+            ->addIndex(array('level'))
             ->create();
     }
 }

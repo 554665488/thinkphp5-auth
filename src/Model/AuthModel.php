@@ -25,8 +25,14 @@ class AuthModel extends Model
 
     public function setStatusAttr($value)
     {
-        if ($value == 'on') return 1;
+        if ($value === 'on') return 1;
         return 0;
+    }
+
+    public function setParentIdAttr($value)
+    {
+        if ($value == -1) return 0;
+        return $value;
     }
 
     public function setTitleAttr($value)
@@ -38,7 +44,7 @@ class AuthModel extends Model
     {
         parent::__construct($data);
         //设置表名
-        $this->table = !empty(Config::get('auth.table.auth_rule')) ? Config::get('auth.table.auth_rule') : 'y_auth_rule';
+        $this->table = !empty($authRule = Config::get('auth.table.auth_rule')) ? $authRule : 'auth_rule';
     }
 
     /**
@@ -109,7 +115,10 @@ class AuthModel extends Model
      */
     public function updateAuth()
     {
-        $user = self::update(Request::post());
+        $updateData = Request::post();
+        //没有值就状态就改为关闭
+        if (!isset($updateData['status'])) $updateData['status'] = 0;
+        $user = self::update($updateData);
         return $user;
     }
 
@@ -122,7 +131,12 @@ class AuthModel extends Model
      */
     public function destroyAuth()
     {
-        return self::destroy(Request::post('id'));
+        $id = Request::post('id');
+        //删除下面关联的子权限 这样不行不通 #bug 会出现删除不了的子权限 出现 垃圾数据 改为不管是批量删除还是单个删除 下边有子权限必须先删除子权限
+//        self::destroy(function ($query) use ($id) {
+//            $query->where('parent_id', 'in', $id);
+//        });
+        return self::destroy($id);
     }
 
     /**
@@ -156,5 +170,42 @@ class AuthModel extends Model
         if (empty($type)) return $authList->toArray();
         //处理后返回结果
         return $arrayHelp->$type($authList->toArray());
+    }
+
+    /**
+     * @param $parentId 父级ID
+     * @Author: yfl
+     * @Email: 554665488@qq.com
+     * @Date:2019年8月13日 15:24:38
+     * @Description:根据parent_id分批返回树状select的数据 TODO 分批获取遇到一个问题 （点击一级菜单触发了远程查询，展示不了子菜单）
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getAuthsByParentIdToSelectData($parentId)
+    {
+        $map[] = ['parent_id', '=', $parentId];
+        $authList = $this->field('id as value, CONCAT_WS("$$",name,title) as name')->where($map)->order('id', 'desc')->select();
+        return $authList->toArray();
+    }
+
+    /**
+     * @param string $ids
+     * @Author: yfl
+     * @Email: 554665488@qq.com
+     * @Date:2019年8月13日 18:42:03
+     * @Description:获取下边的子权限   判断要删除的权限下边是否有子权限
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getChildrenAuthByIds($ids = '')
+    {
+        if(!$ids) $ids = Request::param('id');
+        $map[] = ['parent_id', 'in', $ids];
+        $authList = $this->field('*')->where($map)->select();
+        return $authList;
     }
 }

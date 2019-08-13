@@ -26,7 +26,7 @@ class Base extends Controller
         include_once __DIR__ . '/../Helper.php';
         $this->param = $this->request->param();
         $this->post = $this->request->post();
-        $this->data = ['layui_css' => AuthBase::LAY_UI_PATH_CSS, 'jquery' => AuthBase::JQUERY_PATH, 'layui_js' => AuthBase::LAY_UI_PATH_JS, 'limit' => AuthBase::TABLE_LIMIT];
+        $this->data = ['layui_css' => AuthBase::LAY_UI_PATH_CSS, 'jquery' => AuthBase::JQUERY_PATH, 'layui_js' => AuthBase::LAY_UI_PATH_JS, 'extend_config' =>AuthBase::EXTEND_CONFIG , 'formSelectsCss'=>AuthBase::FORM_SELECTS_CSS ,'limit' => AuthBase::TABLE_LIMIT];
     }
 
     /**
@@ -59,12 +59,12 @@ class Base extends Controller
         ];
     }
 
-    public function ajaxSuccess($code = 1, string $msg = '操作成功', array $data = array())
+    public function ajaxSuccess($code = 1,  $msg = '操作成功',  $data = array())
     {
         return ['code' => $code, 'msg' => $msg, 'data' => $data];
     }
 
-    public function ajaxFail($code = 0, string $msg = '操作失败', array $data = array())
+    public function ajaxFail($code = 0,  $msg = '操作失败', array $data = array())
     {
         return ['code' => $code, 'msg' => $msg, 'data' => $data];
     }

@@ -46,6 +46,34 @@ class ArrayHelp
         return $returnArr;
     }
 
+    /**
+     * @param array $data
+     * @Author: yfl
+     * @Email: 554665488@qq.com
+     * @Date:二〇一九年八月十三日 15:07:09
+     * @Description:直接获取所有权限列表的树状结构
+     * @return array
+     */
+    public function getTreeLayuiSelectJsonData(array $data)
+    {
+        $items = array();
+        foreach ($data as $value) {
+            $items[$value['id']]['name'] = $value['name'] . '$$' .$value['title'];
+            $items[$value['id']]['value'] = $value['id'];
+            $items[$value['id']]['parent_id'] = $value['parent_id'];
+        }
+        $tree = array();
+        foreach ($items as $id => $item) {
+            if (isset($items[$item[$this->parent_id]])) {
+                $items[$item[$this->parent_id]]['children'][] = &$items[$id];
+            } else {
+                $tree[] = ['name' => $items[$id]['name'], 'type'=> 'optgroup'];
+                $tree[] =& $items[$id];
+            }
+        }
+        return $tree;
+    }
+
     //引用算法生成树状结构数据
     public function generateTree(array $data)
     {

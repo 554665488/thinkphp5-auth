@@ -99,6 +99,10 @@ class Auth extends Base
     {
         if ($this->request->isPost()) {
             $authModel = new AuthModel();
+
+            $isHasChildrenAuth = $authModel ->getChildrenAuthByIds();
+            //检查是否有子权限 有的话 不能删除
+            if($isHasChildrenAuth->isEmpty() == false)  return  $this->ajaxFail(0,'请先删除子权限');
             $deltedResult = $authModel->destroyAuth();
             if ($deltedResult) return $this->ajaxSuccess();
             return $this->ajaxFail();
@@ -109,7 +113,7 @@ class Auth extends Base
      * @Author: yfl
      * @Email: 554665488@qq.com
      * @Date:
-     * @Description:获取所有权限
+     * @Description:递归获取所有权限 返回josn 或者 拼接好的select options 或者返回 array
      * @return array
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
@@ -119,14 +123,32 @@ class Auth extends Base
     {
         if ($this->request->isGet()) {
             $authModel = new AuthModel();
-            $auths = $authModel ->getAllAuths('makeTreeLevel');
-            dump($auths);die;
-            if(Request::has('type') and Request::param('type') == 'treejson'){
-                $auths = $authModel ->getAllAuths('getTreeLayuiData');
-                return ['auths'=> $auths];
+            if (Request::has('type') and Request::param('type') == 'select_tree_json') {
+                // 分批获取有问题，现改为一次性获取全部
+                //$parent_id = Request::get('parent_id', 0 , 'intval');
+                //$auths = $authModel->getAuthsByParentIdToSelectData($parent_id);
+                //if(empty($auths))  return ['auths' => 'notChildren',];
+                $auths = $authModel->getAllAuths('getTreeLayuiSelectJsonData');
+                //顶级返回 value = 0 的时候 前台select 选中不了 返回 -1 模型的修改器 处理为 0
+                array_unshift($auths, array('name' => "顶级", 'value' => -1));
+                return ['auths' => $auths];
             }
-            $auths = $authModel ->getAllAuths('getTreeToHtmlOption');
-            return ['auths'=> $auths];
+
+            if (Request::has('type') and Request::param('type') == 'treejson') {
+                $auths = $authModel->getAllAuths('getTreeLayuiData');
+                return ['auths' => $auths];
+            }
+            //取消下边的返回形式
+            $auths = $authModel->getAllAuths('getTreeToHtmlOption');
+            return ['auths' => $auths];
         }
     }
+    //动态分批根据parent_id获取权限信息 select 显示有问题
+//    public function getAuthsByBatcheToTreeSelect($patent = 0)
+//    {
+//        if($this->request->isGet()){
+//            $authModel = new AuthModel();
+//            $auth = $authModel->getAuthsByParentIdToSelectData($patent);
+//        }
+//    }
 }

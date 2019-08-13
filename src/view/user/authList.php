@@ -7,9 +7,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="{$layui_css}" media="all">
+    <link rel="stylesheet" href="{$formSelectsCss}" media="all">
     <script src="{$jquery}" charset="utf-8"></script>
     <script src="{$layui_js}" charset="utf-8"></script>
-
+    <script src="{$extend_config}" charset="utf-8"></script>
 </head>
 <body>
 <!--create auth start-->
@@ -19,7 +20,8 @@
             <div class="layui-inline">
                 <label class="layui-form-label">权限分组</label>
                 <div class="layui-input-block" style="width: 350px">
-                    <select id="parent_id" name="parent_id" lay-verify="required" lay-search="">
+                    <select name="parent_id" xm-select="add_auth_select_parent" xm-select-radio=""  lay-verify="required", lay-verType="tips" xm-select-max="3" xm-select-search="" xm-select-search-type="dl">
+                        <option value="">请选择</option>
                     </select>
                 </div>
             </div>
@@ -74,7 +76,9 @@
             <div class="layui-inline">
                 <label class="layui-form-label">权限分组</label>
                 <div class="layui-input-block" style="width: 350px">
-                    <select id="edit_parent_id" name="parent_id" lay-verify="required" lay-search="">
+                    <select name="parent_id" xm-select="edit_auth_select_parent" xm-select-radio=""  lay-verify="required", lay-verType="tips" xm-select-max="3" xm-select-search="" xm-select-search-type="dl">
+                        <option value="">请选择</option>
+
                     </select>
                 </div>
             </div>
@@ -233,74 +237,212 @@
             }
         });
     }
+    //设置select选中
+    function formSelectValue(select, value) {
 
-    //添加权限加载 auth select option
-    function AddAuthAjaxgetAllAuthlist() {
-        $.ajax({
-            url: '{:url("auth/get_auth_all")}',
-            type: 'GET',
-            dataType: 'json',
-            data: {},
-            cache: false,
-            async: true,
-            beforeSend: function () {
-                layer.load(1, {
-                    shade: [0.1, '#fff'], time: 2 * 1000 //0.1透明度的白色背景
-                });
-            },
-            complete: function () {
-                layer.close('loading');
-            },
-            success: function (res) {
-                $("#parent_id").html(res.auths);
-                //刷新select选择框渲染
-                layui.use('form', function () {
-                    var form = layui.form;
-                    form.render('select');
-                })
-                return false;
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                layer.alert('网络失败，请刷新页面后重试', {icon: 2});
-            }
+        layui.use(['jquery', 'formSelects'], function () {
+            var formSelects = layui.formSelects;
+            formSelects.value(select, value)
         });
+    }
+    //添加权限加载已有的权限选着所属父级权限 auth select option
+    function AddAuthAjaxgetAllAuthlist() {
+        layui.use(['jquery', 'formSelects'], function () {
+            var formSelects = layui.formSelects;
+            $.ajax({
+                url: '{:url("auth/get_auth_all")}',
+                type: 'GET',
+                dataType: 'json',
+                data: {type:'select_tree_json'},
+                cache: false,
+                async: true,
+                beforeSend: function () {
+                    layer.load(1, {
+                        shade: [0.1, '#fff'], time: 2 * 1000 //0.1透明度的白色背景
+                    });
+                },
+                complete: function (){
+                    layer.closeAll('loading');
+                },
+                success: function (res) {
+                    // console.log(res);
+                    layui.formSelects.data('add_auth_select_parent', 'local', {
+                        // arr: [
+                        //     {name: '分组1', type: 'optgroup'},
+                        //     {name: '北京', value: 1, xslkdf: '123', children: [{name: '朝阳', disabled: true, value: 11}, {name: '海淀', value: 12}]},
+                        //     {name: '分组2', type: 'optgroup'},
+                        //     {name: '深圳', value: 2, children: [{name: '龙岗', value: 21}]},
+                        // ],
+                        arr:res.auths,
+                        tree: {
+                            //在点击节点的时候, 如果没有子级数据, 会触发此事件
+                            nextClick: function(id, item, callback){
+                                // console.log(id);
+                                // console.log(item);
+                                //需要在callback中给定一个数组结构, 用来展示子级数据
+                                // callback([
+                                //     {name: 'test1', value: Math.random()},
+                                //     {name: 'test2', value: Math.random()}
+                                // ])
+                                 layer.msg('没有了'); return ;
+                                //TODO 展示不了子选项
+                                // $.ajax({
+                                //     url: '{:url("auth/get_auth_all")}',
+                                //     type: 'GET',
+                                //     dataType: 'json',
+                                //     data: {type:'select_tree_json',parent_id:item.value},
+                                //     cache: false,
+                                //     async: true,
+                                //     beforeSend: function () {
+                                //         // layer.load(1, {
+                                //         //     shade: [0.1, '#fff'], time: 2 * 1000 //0.1透明度的白色背景
+                                //         // });
+                                //     },
+                                //     complete: function () {
+                                //         // layer.closeAll('loading');
+                                //     },
+                                //     success: function (res) {
+                                //         console.log(res);
+                                //         if(res == 'notChildren'){
+                                //             layer.msg('没有了'); return ;
+                                //         }
+                                //          callback(res)
+                                //          return false;
+                                //     },
+                                //     error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                //         layer.alert('网络失败，请刷新页面后重试', {icon: 2});
+                                //     }
+                                // });
+                            },
+                        }
+                    });
+                    return false;
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    layer.alert('网络失败，请刷新页面后重试', {icon: 2});
+                }
+            });
+
+            //这里也算是给自己挖了一手好坑吧, 简单的一种处理方式, 在多选第一次打开的时候收缩所有的子节点, 目前处理的很粗鲁, 就是为了一种效果, 收缩全部节点
+            var isFirst = true;
+            layui.formSelects.opened('add_auth_select_parent', function(id){
+                if(isFirst){
+                    isFirst = false;
+                    $('[fs_id="add_auth_select_parent"]').find('.xm-cz i.icon-caidan').click();
+                }
+            });
+        });
+        // $.ajax({
+        //     url: '{:url("auth/get_auth_all")}',
+        //     type: 'GET',
+        //     dataType: 'json',
+        //     data: {},
+        //     cache: false,
+        //     async: true,
+        //     beforeSend: function () {
+        //         layer.load(1, {
+        //             shade: [0.1, '#fff'], time: 2 * 1000 //0.1透明度的白色背景
+        //         });
+        //     },
+        //     complete: function () {
+        //         layer.close('loading');
+        //     },
+        //     success: function (res) {
+        //         $("#parent_id").html(res.auths);
+        //         //刷新select选择框渲染
+        //         layui.use('form', function () {
+        //             var form = layui.form;
+        //             form.render('select');
+        //         })
+        //         return false;
+        //     },
+        //     error: function (XMLHttpRequest, textStatus, errorThrown) {
+        //         layer.alert('网络失败，请刷新页面后重试', {icon: 2});
+        //     }
+        // });
     }
 
     //编辑加载auth to to html option
     /**
      * 编辑权限加载 auth select option
      * @param editId 编辑的哪一个ID
-     * @param checkedID 默认选中的ID
+     * @param checkedID 默认选中的select option
      */
     function editAuthAjaxgetAllAuthlist(checkedID, editID) {
-        $.ajax({
-            url: '{:url("auth/get_auth_all")}',
-            type: 'GET',
-            dataType: 'json',
-            data: {check_id: checkedID, edit_id: editID},
-            cache: false,
-            async: true,
-            beforeSend: function () {
-                layer.load(2, {
-                    shade: [0.1, '#fff'], time: 2 * 1000 //0.1透明度的白色背景
-                });
-            },
-            complete: function () {
-                layer.closeAll('loading');
-            },
-            success: function (res) {
-                $("#edit_parent_id").html(res.auths);
-                //刷新select选择框渲染
-                layui.use('form', function () {
-                    var form = layui.form;
-                    form.render('select');
-                })
-                return false;
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                layer.alert('网络失败，请刷新页面后重试', {icon: 2});
-            }
+        console.log(checkedID);
+        layui.use(['jquery', 'formSelects'], function () {
+            var formSelects = layui.formSelects;
+            $.ajax({
+                url: '{:url("auth/get_auth_all")}',
+                type: 'GET',
+                dataType: 'json',
+                data: {type:'select_tree_json', edit_id: editID},
+                cache: false,
+                async: true,
+                beforeSend: function () {
+                    layer.load(1, {
+                        shade: [0.1, '#fff'], time: 2 * 1000 //0.1透明度的白色背景
+                    });
+                },
+                complete: function (){
+                    layer.closeAll('loading');
+                },
+                success: function (res) {
+                    // console.log(res);
+                    layui.formSelects.data('edit_auth_select_parent', 'local', {
+                        arr:res.auths,
+                        tree: {
+                            //在点击节点的时候, 如果没有子级数据, 会触发此事件
+                            nextClick: function(id, item, callback){
+                                layer.msg('没有了'); return ;
+                            },
+                        }
+                    });
+                    // checkedID == 0 的时候选中不了select
+                    if(checkedID == 0) checkedID = -1
+                    formSelectValue('edit_auth_select_parent', [checkedID]);
+                    return false;
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    layer.alert('网络失败，请刷新页面后重试', {icon: 2});
+                }
+            });
+            var isFirst = true;
+            layui.formSelects.opened('edit_auth_select_parent', function(id){
+                if(isFirst){
+                    isFirst = false;
+                    $('[fs_id="edit_auth_select_parent"]').find('.xm-cz i.icon-caidan').click();
+                }
+            });
         });
+        // $.ajax({
+        //     url: '{:url("auth/get_auth_all")}',
+        //     type: 'GET',
+        //     dataType: 'json',
+        //     data: {check_id: checkedID, edit_id: editID},
+        //     cache: false,
+        //     async: true,
+        //     beforeSend: function () {
+        //         layer.load(2, {
+        //             shade: [0.1, '#fff'], time: 2 * 1000 //0.1透明度的白色背景
+        //         });
+        //     },
+        //     complete: function () {
+        //         layer.closeAll('loading');
+        //     },
+        //     success: function (res) {
+        //         $("#edit_parent_id").html(res.auths);
+        //         //刷新select选择框渲染
+        //         layui.use('form', function () {
+        //             var form = layui.form;
+        //             form.render('select');
+        //         })
+        //         return false;
+        //     },
+        //     error: function (XMLHttpRequest, textStatus, errorThrown) {
+        //         layer.alert('网络失败，请刷新页面后重试', {icon: 2});
+        //     }
+        // });
     }
 </script>
 <!--ajax end-->
@@ -374,7 +516,8 @@
                             }, function (index, layero) {
                                 //按钮【按钮一】的回调
                                 // console.log('编辑');
-                                //创建树形节点
+                                //创建编辑树形节点
+                                // console.log(data);
                                 if (data.title != '未命名' && data.auth_title != 'undefined') {
                                     //编辑数形节点 填充数据
                                     layui.use('form', function () {
@@ -403,11 +546,12 @@
                                         },
                                         cancel: function(index, layero){
                                             layer.msg('cancel');
+                                            layer.closeAll('page');
                                             return false;
                                         }
                                         , end : function(index, layero){
                                             resetEditFrom();
-                                            loadTree();
+                                            // loadTree();
                                             return false;
                                         }
                                     });
@@ -438,8 +582,10 @@
                             }, function (index) {
                                 // console.log('删除');
                                 //按钮【按钮二】的回调
-                                if (data.title != '未命名' && data.auth_title != 'undefined') {
-                                    ajaxRequest('{:url("auth/ajax_del_auth")}', {id: data.id}, 'post');
+                                if (data.title != '未命名' && data.auth_title != 'undefined'){
+                                    layer.confirm('真的删除权限么', function (index) {
+                                        ajaxRequest('{:url("auth/ajax_del_auth")}', {id: data.id}, 'post');
+                                    })
                                 }
                             });
 
@@ -460,10 +606,12 @@
                                 return 123;
                             } else if (type === 'del') { //删除节点
                                 if (data.title != '未命名' && data.auth_title != 'undefined') {
-                                    ajaxRequest('{:url("auth/ajax_del_auth")}', {id: data.id}, 'post');
+                                    layer.confirm('真的删除权限么', function (index) {
+                                        ajaxRequest('{:url("auth/ajax_del_auth")}', {id: data.id}, 'post');
+                                    })
+
                                 }
-                            }
-                            ;
+                            };
                         }
                     });
                     return false;
@@ -602,7 +750,7 @@
                         ids += val.id + ',';
                     });
                     ids = ids.substring(0, ids.length - 1);
-                    layer.confirm('真的删除' + data.length + '行么', function (index) {
+                    layer.confirm('真的删除' + data.length + '行权限么', function (index) {
                         ajaxRequest('{:url("auth/ajax_del_auth")}', {id: ids}, 'post', true);
                     });
                     break;
@@ -637,9 +785,35 @@
         table.on('tool(authTableFilter)', function (obj) {
                 var data = obj.data;
                 if (obj.event === 'delAuthEvent') {
-                    layer.confirm('真的删除行么', function (index) {
-                        ajaxRequest('{:url("auth/ajax_del_auth")}', {id: data.id}, 'post');
-                        obj.del();
+                    layer.confirm('真的删除权限么', function (index) {
+                        $.ajax({
+                            url: '{:url("auth/ajax_del_auth")}',
+                            type: 'post',
+                            dataType: 'json',
+                            data: {id: data.id},
+                            cache: false,
+                            async: true,
+                            beforeSend: function () {
+                                var index = layer.load(1, {
+                                    shade: [0.1, '#fff'], time: 2 * 1000 //0.1透明度的白色背景
+                                });
+                            },
+                            complete: function () {
+                                layer.close(index);
+                            },
+                            success: function (res) {
+                                if (res.code) {
+                                    layer.msg(res.msg, {icon: 1});
+                                     obj.del();
+                                } else {
+                                    layer.msg(res.msg, {icon: 5});
+                                }
+                                return false;
+                            },
+                            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                                layer.alert('网络失败，请刷新页面后重试', {icon: 2});
+                            }
+                        });
                         layer.close(index);
                     });
                 } else if (obj.event === 'editAuthEvent') {

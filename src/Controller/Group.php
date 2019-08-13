@@ -25,6 +25,10 @@ use thinkAuth\Model\GroupModel;
  */
 class Group extends Base
 {
+    public function users()
+    {
+        return $this->belongsToMany(\thinkAuth\Model\GroupModel::class, \AuthGroupAccess::class, 'uid', 'id');
+    }
     /**
      * @Author: yfl
      * @Email: 554665488@qq.com
@@ -36,7 +40,7 @@ class Group extends Base
     {
         return $this->fetch(AuthBase::VIEW_PATH . 'user/groupList.php', $this->getData());
     }
-
+    
     /**
      * @Author: yfl
      * @Email: 554665488@qq.com

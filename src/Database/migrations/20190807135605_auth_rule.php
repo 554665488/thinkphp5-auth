@@ -29,7 +29,7 @@ class AuthRule extends AbstractMigration
     {
         //https://www.jianshu.com/p/894662846d8c
         // create the table
-        $table = $this->table('y_auth_rule', array('engine' => 'InnoDB', 'CHARSET' => 'utf8', 'comment' => '规则表'));
+        $table = $this->table('auth_rule', array('engine' => 'InnoDB', 'CHARSET' => 'utf8', 'comment' => '规则表'));
         if ($table->exists()) $table->drop();
         $table->addColumn('name', 'string', array('limit' => 120, 'null' => false, 'default' => '', 'comment' => '规则唯一标识'))
             ->addColumn('title', 'string', array('limit' => 32, 'null' => false, 'default' => '', 'comment' => '权限中文名称'))

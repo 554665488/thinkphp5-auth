@@ -7,8 +7,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="{$layui_css}" media="all">
+    <link rel="stylesheet" href="{$formSelectsCss}" media="all">
     <script src="{$jquery}" charset="utf-8"></script>
     <script src="{$layui_js}" charset="utf-8"></script>
+    <script src="{$extend_config}" charset="utf-8"></script>
 
 </head>
 <body>
@@ -22,9 +24,14 @@
                        autocomplete="off" class="layui-input">
             </div>
         </div>
-
-
-
+        <div class="layui-form-item">
+            <label class="layui-form-label">选择用户</label>
+            <div class="layui-input-block" style="width: 300px" >
+            <select name="users_id" xm-select="select_user_div">
+                <option value="">选择用户</option>
+            </select>
+            </div>
+        </div>
         <div class="layui-form-item">
             <label class="layui-form-label">状态</label>
             <div class="layui-input-block">
@@ -79,34 +86,14 @@
     </div>
 </script>
 <div class="layui-form">
-    <div class="layui-fluid">
-        <div class="layui-form layui-col-md12">
-            <div class="layui-form-item">
-                <div class="layui-col-md4">
-                    <label class="layui-form-label">城市<span style="color:red">●</span></label>
-                    <div class="layui-input-block">
-                        <select name="select_base_cityname" id="select_base_cityname" lay-filter="select_base_cityname" xm-select="select_base_cityname" xm-select-type="1">
-                            <option value=""></option>
-                            <option value="1">北京</option>
-                            <option value="2">上海</option>
-                            <option value="3">天津</option>
-                            <option value="4">重庆</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="layui-row ">
-                <div class="test-table-reload-btn" style="margin-bottom: 10px;">
-                    <button type="button" class="layui-btn layui-btn-danger" lay-submit lay-filter="btn_submit" id="btn_submit"><i class="layui-icon">&#xe681</i>获取</button>
+    <select name="city" xm-select="example11_1">
+        <option value="">栽树乘凉</option>
+    </select>
 
-
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
+
 <!--table head tools html end-->
-<!--<table class="layui-hide" id="groupTableHtmlId" lay-filter="groupTableFilter"></table>-->
+<table class="layui-hide" id="groupTableHtmlId" lay-filter="groupTableFilter"></table>
 <!--table list action start-->
 <script type="text/html" id="action">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
@@ -230,16 +217,16 @@
         });
 
         //监听表格头部头工具栏事件
-        table.on('toolbar(userTableFilter)', function (obj) {
+        table.on('toolbar(groupTableFilter)', function (obj) {
             var checkStatus = table.checkStatus(obj.config.id);
             switch (obj.event) {
-                case 'addUserEvent':
+                case 'addGroupEvent':
                     layer.open({
                         type: 1,
-                        area: '500px',
+                        area: ['500px','500px'],
                         title: '添加用户',
                         shadeClose: true,
-                        content: $('#addUserDiv') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                        content: $('#addGroupDiv') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
                     });
                     break;
                 case 'delUsersEvent':

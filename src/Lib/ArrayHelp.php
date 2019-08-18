@@ -51,23 +51,28 @@ class ArrayHelp
      * @Author: yfl
      * @Email: 554665488@qq.com
      * @Date:二〇一九年八月十三日 15:07:09
-     * @Description:直接获取所有权限列表的树状结构
+     * @Description:直接获取所有权限列表的树状结构 引用但会处理
      * @return array
      */
     public function getTreeLayuiSelectJsonData(array $data)
     {
         $items = array();
         foreach ($data as $value) {
-            $items[$value['id']]['name'] = $value['name'] . '$$' .$value['title'];
+            $items[$value['id']]['name'] = $value['title'];
             $items[$value['id']]['value'] = $value['id'];
             $items[$value['id']]['parent_id'] = $value['parent_id'];
+//            if ($value['parent_id'] != 0) {
+//                $items[$value['id']]['disabled'] = true;
+//            }
         }
+
         $tree = array();
         foreach ($items as $id => $item) {
             if (isset($items[$item[$this->parent_id]])) {
                 $items[$item[$this->parent_id]]['children'][] = &$items[$id];
             } else {
-                $tree[] = ['name' => $items[$id]['name'], 'type'=> 'optgroup'];
+                if ($item[$this->parent_id] != 0) unset($item);
+//                $tree[] = ['name' => $items[$id]['name'], 'type' => 'optgroup'];
                 $tree[] =& $items[$id];
             }
         }
@@ -134,6 +139,39 @@ class ArrayHelp
                 ];
                 unset($data[$index]);
                 $children = $this->getTreeLayuiData($data, $datum[$this->primary], $level + 1);
+                if (!empty($children)) $returnArr[$index]['children'] = array_merge($children);
+            }
+        }
+        return $returnArr;
+    }
+
+    /**
+     * @param array $data
+     * @param int $parent_id
+     * @param int $level
+     * @Author: yfl
+     * @Email: 554665488@qq.com
+     * @Date:
+     * @Description:获取authTree给权限组分配权限
+     * @return array
+     */
+    public function getTreeLayuiDataToGroupAuth(array $data, $parent_id = 0, $level = 0)
+    {
+        if (empty($data)) return $data;
+        $returnArr = [];
+        foreach ($data as $index => $datum) {
+            if ($datum[$this->parent_id] == $parent_id) {
+                $datum['level'] = $level;
+                $returnArr[$index] = [
+                    'id' => $datum['id'],
+                    'title' => $datum['title'],
+//                    'checked' => ($datum[$this->parent_id] != 0 and in_array($datum['id'], $checkIds)) ? true : false,
+//                    'disabled' => in_array($datum['id'], $checkIds) ? true : false,
+//                    'spread' => true //设置默认展开
+
+                ];
+                unset($data[$index]);
+                $children = $this->getTreeLayuiDataToGroupAuth($data, $datum[$this->primary], $level + 1);
                 if (!empty($children)) $returnArr[$index]['children'] = array_merge($children);
             }
         }

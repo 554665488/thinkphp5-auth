@@ -27,11 +27,11 @@ class AuthGroupAccess extends AbstractMigration
      */
     public function change()
     {
-        $table = $this->table('y_auth_group_access',array('engine' => 'InnoDB', 'CHARSET' => 'utf8', 'comment' => '用户组表'));
+        $table = $this->table('user_group_access',array('engine' => 'InnoDB', 'CHARSET' => 'utf8', 'comment' => '用户和权限组关联中间表'));
         if ($table->exists()) $table->drop();
         $table->addColumn('uid', 'integer', array('limit' => 11, 'null'=> false, 'default' => 0, 'comment' => '用户ID'))
             ->addColumn('auth_group_id', 'integer', array('limit' => 11, 'null'=> false, 'default' => 0, 'comment' => '用户组id'))
-            ->addIndex(array('uid','auth_group_id'))
+            ->addIndex(array('uid','auth_group_id'), ['type'=> 'unique'])
             ->create();
     }
 }

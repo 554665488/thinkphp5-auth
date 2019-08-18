@@ -2,7 +2,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class AuthGroupAccess extends AbstractMigration
+class AuthGroup extends AbstractMigration
 {
     /**
      * Change Method.
@@ -27,11 +27,13 @@ class AuthGroupAccess extends AbstractMigration
      */
     public function change()
     {
-        $table = $this->table('y_auth_group_access',array('engine' => 'InnoDB', 'CHARSET' => 'utf8', 'comment' => '用户组表'));
+        $table = $this->table('group',array('engine' => 'InnoDB', 'CHARSET' => 'utf8', 'comment' => '用户组表'));
         if ($table->exists()) $table->drop();
-        $table->addColumn('uid', 'integer', array('limit' => 11, 'null'=> false, 'default' => 0, 'comment' => '用户ID'))
-            ->addColumn('auth_group_id', 'integer', array('limit' => 11, 'null'=> false, 'default' => 0, 'comment' => '用户组id'))
-            ->addIndex(array('uid','auth_group_id'))
+        $table->addTimestamps()
+            ->addColumn('title', 'string', array('limit' => 32, 'null'=> false, 'default' => '', 'comment' => '用户组中文名称'))
+            ->addColumn('status', 'boolean', array('limit' => 1, 'null'=> false, 'default' => 0, 'comment' => '状态：为1正常，为0禁用'))
+            //->addColumn('rules', 'string', array('limit' => 100, 'null'=> false, 'default' => '', 'comment' => '用户组拥有的规则id'))
+//            ->addIndex(array('rules'))
             ->create();
     }
 }

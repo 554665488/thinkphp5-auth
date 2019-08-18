@@ -15,24 +15,19 @@
 <body>
 <!--add user html start-->
 <div id="addUserDiv" style="display: none">
-    <form class="layui-form" lay-filter="addUserForm">
+    <form class="layui-form reset-form" lay-filter="addUserForm">
         <div class="layui-form-item">
             <label class="layui-form-label">选择权限组</label>
             <div class="layui-input-block" style="width: 300px">
-                <select name="group_id" xm-select="example2_1" lay-verify="required" xm-select-search=""
+                <select name="group_id" xm-select="add_user_select_groups" lay-verify="required" xm-select-search=""
                         xm-select-search-type="dl">
-                    <option value="1">用户组1</option>
-                    <option value="2">用户组2</option>
-                    <option value="3">用户组3</option>
-                    <option value="4">用户组4</option>
-                    <option value="5">用户组5</option>
                 </select>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">选择角色</label>
             <div class="layui-input-block" style="width: 300px">
-                <select name="role_id" xm-select="example2_2" lay-verify="required" xm-select-search=""
+                <select name="role_id" xm-select="add_user_select_roles" lay-verify="required" xm-select-search=""
                         xm-select-search-type="dl">
                     <option value="8">CEO</option>
                     <option value="9">市场经理</option>
@@ -92,17 +87,12 @@
 <!--add user html end-->
 <!--edit user html start-->
 <div id="editUserDiv" style="display: none">
-    <form class="layui-form" lay-filter="editForm">
+    <form class="layui-form reset-form" lay-filter="editForm" >
         <div class="layui-form-item">
             <label class="layui-form-label">选择权限组</label>
             <div class="layui-input-block" style="width: 300px">
-                <select name="group_id" xm-select="example2_3" lay-verify="required" xm-select-search=""
+                <select name="group_id" xm-select="edit_user_select_groups" lay-verify="required" xm-select-search=""
                         xm-select-search-type="dl">
-                    <option value="1">用户组1</option>
-                    <option value="2">用户组2</option>
-                    <option value="3">用户组3</option>
-                    <option value="4">用户组4</option>
-                    <option value="5">用户组5</option>
                 </select>
                 <input type="hidden" name="have_group_ids" value="">
             </div>
@@ -110,7 +100,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">选择角色</label>
             <div class="layui-input-block" style="width: 300px">
-                <select name="role_id" xm-select="example2_4" lay-verify="required" xm-select-search=""
+                <select name="role_id" xm-select="edit_user_select_roles" lay-verify="required" xm-select-search=""
                         xm-select-search-type="dl">
                     <option value="8">CEO</option>
                     <option value="9">市场经理</option>
@@ -208,17 +198,7 @@
 </script>
 <!--table head tools html end-->
 <table class="layui-hide" id="userTableId" lay-filter="userTableFilter"></table>
-<!--table list action start-->
-<!--<div class="layui-form">-->
-<!--    <select name="city" xm-select="example2_22">-->
-<!--        <option value="1" selected="selected">北京</option>-->
-<!--        <option value="2">上海</option>-->
-<!--        <option value="3">广州</option>-->
-<!--        <option value="4">深圳</option>-->
-<!--        <option value="5">天津</option>-->
-<!--    </select>-->
-<!--    <button class="layui-btn example-btn" onclick="test()">赋值 北京,上海</button>-->
-<!--</div>-->
+
 <script type="text/html" id="action">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
@@ -231,9 +211,9 @@
             var form = layui.form;
             var formSelects = layui.formSelects;
             //重置选择权限组
-            layui.formSelects.value('example2_1', []);
+            layui.formSelects.value('add_user_select_groups', []);
             //重置选择角色
-            layui.formSelects.value('example2_2', []);
+            layui.formSelects.value('edit_user_select_groups', []);
             //表单初始复制
             form.val('addUserForm', {
                 "user_name": ''
@@ -246,7 +226,14 @@
             });
         });
     }
-
+    //重置表单2
+    function formReset(){
+        $('.reset-form')[0].reset();
+        //重置选择权限组
+        layui.formSelects.value('add_user_select_groups', []);
+        //重置选择角色
+        layui.formSelects.value('edit_user_select_groups', []);
+    }
     function ajaxRequest(url, data, type, isReload) {
         var index;
         $.ajax({
@@ -294,6 +281,35 @@
             }
         });
     }
+    //添加用户 处理选择的组
+    layui.use(['jquery', 'formSelects'], function () {
+        var formSelects = layui.formSelects;
+        //添加用户
+        formSelects.opened('add_user_select_groups', function (id) {
+            formSelects.data('add_user_select_groups', 'server', {
+                url: '{:url("auth/ajax_add_user")}' + '?type=select_group_json',
+                keyword: '',
+                // beforeSuccess: function(id, url, searchVal, result){
+                //     var index = layer.load(1, {
+                //         shade: [0.1, '#fff'], time: 2 * 1000 //0.1透明度的白色背景
+                //     });
+                // },
+                // success: function(id, url, searchVal, result){
+                //     console.log('id: example6_3, 成功返回数据!!!');
+                // }
+            });
+        });
+        //自定义显示的内容
+        layui.formSelects.render('add_user_select_groups', {
+            template: function (name, value, selected, disabled) {
+                // console.log(name);
+                // console.log(value);
+                // console.log(selected);
+                var str = '';
+                return value.name + '<span style="position: absolute; right: 0; color: #A0A0A0; font-size: 12px;" title=' + value.users + '>' + value.users + '</span>';
+            }
+        });
+    });
 </script>
 <!--selectfrom js start-->
 <script>
@@ -304,11 +320,11 @@
             formSelects.value(select, value)
         });
     }
-
+    //编辑用户处理 监听组和角色的选择动作
     layui.use(['jquery', 'formSelects'], function () {
         var formSelects = layui.formSelects;
         var del_group_ids = '', del_role_ids = '';
-        formSelects.on('example2_3', function (id, vals, val, isAdd, isDisabled) {
+        formSelects.on('edit_user_select_groups', function (id, vals, val, isAdd, isDisabled) {
             if (isAdd == false) {
                 del_group_ids += val.value + ',';
             }
@@ -322,40 +338,13 @@
             //如果return false, 那么将取消本次操作
             // return false;
         });
-        formSelects.on('example2_4', function (id, vals, val, isAdd, isDisabled) {
+        formSelects.on('edit_user_select_roles', function (id, vals, val, isAdd, isDisabled) {
 
             if (isAdd == false) {
                 del_role_ids += val.value + ',';
             }
             $('#del_role_ids').val(del_role_ids.substring(0, del_role_ids.length - 1));
         });
-        // layui.formSelects.data('select_user_div', 'local', {
-        //     arr: [
-        //         {name: '分组1', type: 'optgroup'},
-        //         {name: '北京', value: 1, xslkdf: '123', children: [{name: '朝阳', disabled: true, value: 11}, {name: '海淀', value: 12}]},
-        //         {name: '分组2', type: 'optgroup'},
-        //         {name: '深圳', value: 2, children: [{name: '龙岗', value: 21}]},
-        //     ],
-        //     tree: {
-        //         //在点击节点的时候, 如果没有子级数据, 会触发此事件
-        //         nextClick: function(id, item, callback){
-        //             //需要在callback中给定一个数组结构, 用来展示子级数据
-        //             callback([
-        //                 {name: 'test1', value: Math.random()},
-        //                 {name: 'test2', value: Math.random()}
-        //             ])
-        //         },
-        //     }
-        // });
-        //
-        // //这里也算是给自己挖了一手好坑吧, 简单的一种处理方式, 在多选第一次打开的时候收缩所有的子节点, 目前处理的很粗鲁, 就是为了一种效果, 收缩全部节点
-        // var isFirst = true;
-        // layui.formSelects.opened('select_user_div', function(id){
-        //     if(isFirst){
-        //         isFirst = false;
-        //         $('[fs_id="select_user_div"]').find('.xm-cz i.icon-caidan').click();
-        //     }
-        // });
     });
 
 </script>
@@ -400,8 +389,9 @@
         });
     });
 
-    layui.use('table', function () {
+    layui.use(['table','formSelects'], function () {
         var table = layui.table;
+        var formSelects = layui.formSelects;
         //表格渲染
         table.render({
             elem: '#userTableId'
@@ -449,6 +439,9 @@
                         title: '添加用户',
                         shadeClose: true,
                         content: $('#addUserDiv') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                        ,end:function(){
+                            formReset();
+                        }
                     });
                     break;
                 case 'delUsersEvent':
@@ -513,8 +506,8 @@
                         //表单初始复制
                         // TODO 编辑用户 修改为动态从数据库获取
                         $.ajax({
-                            url: '{:url("auth/ajax_get_user")}',
-                            type: 'post',
+                            url: '{:url("auth/ajax_edit_user")}',
+                            type: 'get',
                             dataType: 'json',
                             data: {id: data.id},
                             cache: false,
@@ -528,12 +521,16 @@
                                 layer.close('loading');
                             },
                             success: function (res) {
+                                // 编辑用户 组数据的处理
+                                layui.formSelects.data('edit_user_select_groups', 'local', {
+                                    arr: res.data.allGroupsToSelect
+                                });
                                 //console.log(res);
                                 res.data.status = (res.data.status == '正常') ? 'on' : '';
                                 res.data.sex = (res.data.sex == '女') ? 2 : 1;
                                 var groupIds = res.data.groupIds;
                                 var roleIds = res.data.roleIds;
-                                //编辑前已有的组和角色 取差集 删除
+                                //编辑前已有的组和角色  删除
                                 var groupIdsStrs = '', roleIdsStr = '';
                                 $.each(groupIds, function (k, val) {
                                     groupIdsStrs += val + ',';
@@ -541,7 +538,7 @@
                                 $.each(roleIds, function (k, v) {
                                     roleIdsStr += v + ',';
                                 })
-
+                                formSelectValue('edit_user_select_groups', groupIds);
                                 if (res.code) {
                                     form.val("editForm", {
                                         "user_name": res.data.user_name
@@ -553,8 +550,8 @@
                                         , 'have_role_ids': roleIdsStr
                                     });
                                     //赋值权限组和角色
-                                    formSelectValue('example2_3', groupIds);
-                                    formSelectValue('example2_4', roleIds);
+
+                                    formSelectValue('edit_user_select_roles', roleIds);
                                 } else {
                                     layer.msg(res.msg, {icon: 5});
                                 }
@@ -585,6 +582,9 @@
                         title: '编辑用户',
                         shadeClose: true,
                         content: $('#editUserDiv') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                        ,end:function(){
+                            formReset();
+                        }
                     });
                 }
             }

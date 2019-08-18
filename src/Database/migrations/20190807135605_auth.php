@@ -29,7 +29,7 @@ class AuthRule extends AbstractMigration
     {
         //https://www.jianshu.com/p/894662846d8c
         // create the table
-        $table = $this->table('y_auth_rule', array('engine' => 'InnoDB', 'CHARSET' => 'utf8', 'comment' => '规则表'));
+        $table = $this->table('auth', array('engine' => 'InnoDB', 'CHARSET' => 'utf8', 'comment' => '规则表'));
         if ($table->exists()) $table->drop();
         $table->addColumn('name', 'string', array('limit' => 120, 'null' => false, 'default' => '', 'comment' => '规则唯一标识'))
             ->addColumn('title', 'string', array('limit' => 32, 'null' => false, 'default' => '', 'comment' => '权限中文名称'))
@@ -38,7 +38,7 @@ class AuthRule extends AbstractMigration
             ->addColumn('status', 'boolean', array('limit' => 1, 'null' => false, 'default' => 0, 'comment' => '状态：为1正常，为0禁用'))
             ->addColumn('condition', 'string', array('limit' => 255, 'null' => false, 'default' => '', 'comment' => '规则表达式，为空表示存在就验证，不为空表示按照条件验证'))
             ->addTimestamps()
-            ->addIndex(array('name'), array('unique' => true))
+//            ->addIndex(array('name'), array('unique' => true))
 //            ->setForeignKeys()
             ->create();
     }

@@ -17,6 +17,10 @@ use thinkAuth\Lib\ArrayHelp;
  */
 class AuthModel extends Model
 {
+    protected $autoWriteTimestamp = true;
+    protected $createTime = 'create_at';
+    protected $updateTime = 'update_at';
+
     public function getStatusAttr($value)
     {
         $status = [-1 => '删除', 0 => '禁用', 1 => '开启', 2 => '待审核'];
@@ -44,7 +48,7 @@ class AuthModel extends Model
     {
         parent::__construct($data);
         //设置表名
-        $this->table = !empty($authRule = Config::get('auth.table.auth_rule')) ? $authRule : 'auth_rule';
+        $this->table = !empty($authRule = Config::get('auth.table.auth')) ? $authRule : 'auth';
     }
 
     /**
@@ -173,6 +177,24 @@ class AuthModel extends Model
     }
 
     /**
+     * @Author: yfl
+     * @Email: 554665488@qq.com
+     * @Date:
+     * @Description:获得所有的权限并设置为选中状态
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getAllAuthsByChecks()
+    {
+        $arrayHelp = new ArrayHelp();
+        $map = [];
+        $authList = $this->field('*')->where($map)->order('id', 'desc')->select();
+        return $arrayHelp->getTreeLayuiDataToGroupAuth($authList->toArray());
+    }
+
+    /**
      * @param $parentId 父级ID
      * @Author: yfl
      * @Email: 554665488@qq.com
@@ -203,7 +225,7 @@ class AuthModel extends Model
      */
     public function getChildrenAuthByIds($ids = '')
     {
-        if(!$ids) $ids = Request::param('id');
+        if (!$ids) $ids = Request::param('id');
         $map[] = ['parent_id', 'in', $ids];
         $authList = $this->field('*')->where($map)->select();
         return $authList;

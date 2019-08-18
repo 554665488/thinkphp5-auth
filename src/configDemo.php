@@ -2,13 +2,13 @@
 return [
     'table'  => [
         // 和Database/migrations 定义的迁移文件一致
-        'auth_group'        => 'auth_group', //权限组
+        'group'        => 'group', //权限组
         'auth_group_access' => 'auth_group_access', //权限组和用户关联中间表
-        'auth_rule'         => 'auth_rule', //权限规则表
-        'auth_user'         => 'user', //用户表
-        'user_role'         => 'user_role', //系统用户角色表
+        'auth'         => 'auth', //权限规则表
+        'user'         => 'user', //用户表
+        'role'         => 'role', //系统用户角色表
         'group_auth'        => 'group_auth', //权限组和权限规则关联表
-        'role_access'       => 'role_access', //权限组和权限规则关联表
+        'user_role_access'       => 'user_role_access', //权限组和权限规则关联表
     ],
     'switch'=>[
         'auth_on'           => 1, // 权限开关

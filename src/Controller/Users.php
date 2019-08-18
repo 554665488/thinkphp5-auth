@@ -5,6 +5,7 @@ namespace thinkAuth\Controller;
 
 use think\facade\Request;
 use thinkAuth\Config\AuthBase;
+use thinkAuth\Model\GroupModel;
 use thinkAuth\Model\UserModel;
 
 /**
@@ -26,9 +27,6 @@ class Users extends Base
      */
     public function userList()
     {
-//        dump(UserModel::getUserRoles(1));
-//        dump(UserModel::getUserGroups(1));
-        //echo AuthBase::VIEW_PATH .'user/create.php';
         $this->view->engine->layout(false);
         return $this->fetch(AuthBase::VIEW_PATH . 'user/userList.php', $this->getData());
     }
@@ -62,6 +60,10 @@ class Users extends Base
      */
     public function ajaxAddUser()
     {
+        if ($this->request->has('type') and $this->request->get('type') == 'select_group_json') {
+            $allGroupsToSelect = GroupModel::getGroupToAddsUsersToSelectOption();
+            return $this->ajaxSuccess(0, '', $allGroupsToSelect);
+        }
         if ($this->request->isPost()) {
             $userModel = new UserModel();
             $userId = $userModel->createUser();
@@ -77,20 +79,34 @@ class Users extends Base
      * @Description:获取用户信息及所属角色和所属组
      * @return array
      */
-    public function ajaxGetUser()
+    public function getUserById()
     {
-        if ($this->request->isPost()) {
-            $uid = Request::post('id', '', 'intval');
+        if ($this->request->isGet()) {
+            $uid = Request::get('id', '', 'intval');
             if (!$uid) $this->ajaxFail();
-            $user = UserModel::get($uid);
-            //获取组
-            $groupIdArrs = UserModel::getUserGroups($uid, ['id']);
-            //获取角色
-            $roleIdArrs = UserModel::getUserRoles($uid, ['id']);
-            $user['groupIds'] = array_column($groupIdArrs->toArray(),'id');
-            $user['roleIds'] =  array_column($roleIdArrs->toArray(),'id');
+            $user = UserModel::editGetUserInfo($uid, ['id']);
             if ($user) return $this->ajaxSuccess(1, '', $user);
             return $this->ajaxFail();
+        }
+    }
+
+    /**
+     * @Author: yfl
+     * @Email: 554665488@qq.com
+     * @Date:二〇一九年八月十四日 10:52:06
+     * @Description:获得所有的用户及属于的权限组及所属角色
+     * @return array|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function getUsersAll()
+    {
+        if ($this->request->isGet()) {
+            if ($this->request->has('type') and $this->request->get('type') == 'select_user_tree_json') {
+                $suersGroupsAndRoles = UserModel::getAddGroupsUsersToSelectOption();
+                return $suersGroupsAndRoles;
+            }
         }
     }
 
@@ -103,6 +119,20 @@ class Users extends Base
      */
     public function ajaxEditUser()
     {
+//        if ($this->request->has('type') and $this->request->get('type') == 'select_group_json') {
+//
+//            return  $this->ajaxSuccess(0, '', $allGroupsToSelect);
+//        }
+        if ($this->request->isGet()) {
+            $uid = Request::get('id', '', 'intval');
+            if (!$uid) $this->ajaxFail();
+            $user = UserModel::editGetUserInfo($uid, ['id']);
+            $allGroupsToSelect = GroupModel::getGroupToAddsUsersToSelectOption($user['groupIds']);
+            //组
+            $user['allGroupsToSelect'] = $allGroupsToSelect;
+            if ($user) return $this->ajaxSuccess(1, '', $user);
+            return $this->ajaxFail();
+        }
         if ($this->request->isPost()) {
             $userModel = new UserModel();
             $updateResult = $userModel->updateUser();

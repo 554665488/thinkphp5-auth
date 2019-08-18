@@ -1,8 +1,9 @@
 <?php
 
-use Phinx\Migration\AbstractMigration;
+use think\migration\Migrator;
+use think\migration\db\Column;
 
-class AuthGroupAccess extends AbstractMigration
+class GroupAuth extends Migrator
 {
     /**
      * Change Method.
@@ -27,11 +28,11 @@ class AuthGroupAccess extends AbstractMigration
      */
     public function change()
     {
-        $table = $this->table('y_auth_group_access',array('engine' => 'InnoDB', 'CHARSET' => 'utf8', 'comment' => '用户组表'));
+        $table = $this->table('group_auth_access', array('engine'=>'InnoDB','CHARSET'=>'utf8','comment'=>'组拥有的权限'));
         if ($table->exists()) $table->drop();
-        $table->addColumn('uid', 'integer', array('limit' => 11, 'null'=> false, 'default' => 0, 'comment' => '用户ID'))
-            ->addColumn('auth_group_id', 'integer', array('limit' => 11, 'null'=> false, 'default' => 0, 'comment' => '用户组id'))
-            ->addIndex(array('uid','auth_group_id'))
+        $table->addColumn('group_id', 'integer', array('limit' => 5, 'null' => false, 'default' => 0, 'comment' => '组的ID'))
+            ->addColumn('auth_rule_id', 'integer', array('limit' => 11, 'null' => false, 'default' => 0, 'comment' => '权限规则的ID'))
+            ->addIndex(array('group_id'))
             ->create();
     }
 }

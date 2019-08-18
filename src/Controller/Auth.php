@@ -64,7 +64,15 @@ class Auth extends Base
      */
     public function ajaxAddAuth()
     {
+        if ($this->request->isGet()) {
+            return $this->getAuthAll();
+        }
         if ($this->request->isPost()) {
+            $postData = $this->request->post();
+            $auth = AuthModel::where(function ($query) use ($postData) {
+                $query->where(['name' => $postData['name']])->where(['title' => $postData['title']]);
+            })->select();
+            if (!$auth->isEmpty()) return $this->ajaxFail(0, '规则或者名称已存在');
             $authModel = new AuthModel();
             $authId = $authModel->createAuth();
             if ($authId) return $this->ajaxSuccess();
@@ -80,6 +88,9 @@ class Auth extends Base
      */
     public function ajaxEditAuth()
     {
+        if ($this->request->isGet()) {
+            return $this->getAuthAll();
+        }
         if ($this->request->isPost()) {
             $authModel = new AuthModel();
             $authId = $authModel->updateAuth();
@@ -99,10 +110,10 @@ class Auth extends Base
     {
         if ($this->request->isPost()) {
             $authModel = new AuthModel();
-
-            $isHasChildrenAuth = $authModel ->getChildrenAuthByIds();
+            $isHasChildrenAuth = $authModel->getChildrenAuthByIds();
             //检查是否有子权限 有的话 不能删除
-            if($isHasChildrenAuth->isEmpty() == false)  return  $this->ajaxFail(0,'请先删除子权限');
+            if ($isHasChildrenAuth->isEmpty() == false) return $this->ajaxFail(0, '请先删除子权限');
+
             $deltedResult = $authModel->destroyAuth();
             if ($deltedResult) return $this->ajaxSuccess();
             return $this->ajaxFail();
@@ -128,6 +139,7 @@ class Auth extends Base
                 //$parent_id = Request::get('parent_id', 0 , 'intval');
                 //$auths = $authModel->getAuthsByParentIdToSelectData($parent_id);
                 //if(empty($auths))  return ['auths' => 'notChildren',];
+                // 取消权限规则无限极分类
                 $auths = $authModel->getAllAuths('getTreeLayuiSelectJsonData');
                 //顶级返回 value = 0 的时候 前台select 选中不了 返回 -1 模型的修改器 处理为 0
                 array_unshift($auths, array('name' => "顶级", 'value' => -1));

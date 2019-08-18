@@ -15,7 +15,7 @@
 <body>
 <!--create auth start-->
 <div id="addAuthDiv" style="display: none">
-    <form class="layui-form" lay-filter="addAuthForm">
+    <form class="layui-form reset-form" lay-filter="addAuthForm">
         <div class="layui-form-item">
             <div class="layui-inline">
                 <label class="layui-form-label">权限分组</label>
@@ -29,7 +29,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">权限规则</label>
             <div class="layui-input-block" style="width: 350px">
-                <input type="text" name="name" required lay-verify="required" placeholder="请输规则Controller/action"
+                <input type="text" name="name"  placeholder="请输规则Controller/action"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -71,7 +71,7 @@
 <!--create auth end-->
 <!--edit auth start-->
 <div id="editAuthDiv" style="display: none">
-    <form class="layui-form" lay-filter="editAuthForm">
+    <form class="layui-form reset-form" lay-filter="editAuthForm">
         <div class="layui-form-item">
             <div class="layui-inline">
                 <label class="layui-form-label">权限分组</label>
@@ -86,7 +86,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">权限规则</label>
             <div class="layui-input-block" style="max-width: 350px">
-                <input type="text" name="name" required lay-verify="required" placeholder="请输规则Controller/action"
+                <input type="text" name="name"  placeholder="请输规则Controller/action"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -161,26 +161,24 @@
 </script>
 <!--table hear menu end -->
 <!-- Tab start-->
-<div class="layui-tab layui-tab-brief" lay-filter="authListTabBrief">
-    <ul class="layui-tab-title">
-        <li class="layui-this">权限列表</li>
-        <li>树形列表</li>
-    </ul>
-    <div class="layui-tab-content" style="height: 100px;">
-        <div class="layui-tab-item layui-show">
-            <table class="layui-hide" id="authTablelistId" lay-filter="authTableFilter"></table>
-        </div>
-        <div class="layui-tab-item">
-            <div class="layui-btn-container">
-<!--                <button type="button" class="layui-btn layui-btn-sm" lay-demo="getChecked">获取选中节点数据</button>-->
-<!--                <button type="button" class="layui-btn layui-btn-sm" lay-demo="setChecked">勾选指定节点</button>-->
-
-                <button type="button" class="layui-btn layui-btn-sm" lay-demo="reload">重新加载</button>
-            </div>
-            <div id="authTree" class="demo-tree demo-tree-box" style="overflow: scroll;"></div>
-        </div>
-    </div>
-</div>
+<!--<div class="layui-tab layui-tab-brief" lay-filter="authListTabBrief">-->
+<!--    <ul class="layui-tab-title">-->
+<!--        <li class="layui-this">权限列表</li>-->
+<!--        <li>树形列表</li>-->
+<!--    </ul>-->
+<!--    <div class="layui-tab-content" style="height: 100px;">-->
+<!--        <div class="layui-tab-item layui-show">-->
+<!--            <table class="layui-hide" id="authTablelistId" lay-filter="authTableFilter"></table>-->
+<!--        </div>-->
+<!--        <div class="layui-tab-item">-->
+<!--            <div class="layui-btn-container">-->
+<!--                <button type="button" class="layui-btn layui-btn-sm" lay-demo="reload">重新加载</button>-->
+<!--            </div>-->
+<!--            <div id="authTree" class="demo-tree demo-tree-box" style="overflow: scroll;"></div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+<table class="layui-hide" id="authTablelistId" lay-filter="authTableFilter"></table>
 <!-- Tab end-->
 <!--list action start-->
 <script type="text/html" id="action">
@@ -191,6 +189,12 @@
 <!--list action end-->
 <!--ajax start-->
 <script>
+    function resetForm() {
+        $('.reset-form')[0].reset();
+        //重置选择权限组
+        layui.formSelects.value('add_auth_select_parent', []);
+        layui.formSelects.value('edit_auth_select_parent', []);
+    }
     function ajaxRequest(url, data, type, isReload) {
         var index;
         $.ajax({
@@ -213,6 +217,7 @@
                     layer.msg(res.msg, {icon: 1});
                 } else {
                     layer.msg(res.msg, {icon: 5});
+                    return  false;
                 }
                 //表格重载
                 setTimeout(function () {
@@ -239,7 +244,6 @@
     }
     //设置select选中
     function formSelectValue(select, value) {
-
         layui.use(['jquery', 'formSelects'], function () {
             var formSelects = layui.formSelects;
             formSelects.value(select, value)
@@ -250,7 +254,7 @@
         layui.use(['jquery', 'formSelects'], function () {
             var formSelects = layui.formSelects;
             $.ajax({
-                url: '{:url("auth/get_auth_all")}',
+                url: '{:url("auth/ajax_add_auth")}',
                 type: 'GET',
                 dataType: 'json',
                 data: {type:'select_tree_json'},
@@ -267,12 +271,6 @@
                 success: function (res) {
                     // console.log(res);
                     layui.formSelects.data('add_auth_select_parent', 'local', {
-                        // arr: [
-                        //     {name: '分组1', type: 'optgroup'},
-                        //     {name: '北京', value: 1, xslkdf: '123', children: [{name: '朝阳', disabled: true, value: 11}, {name: '海淀', value: 12}]},
-                        //     {name: '分组2', type: 'optgroup'},
-                        //     {name: '深圳', value: 2, children: [{name: '龙岗', value: 21}]},
-                        // ],
                         arr:res.auths,
                         tree: {
                             //在点击节点的时候, 如果没有子级数据, 会触发此事件
@@ -316,6 +314,11 @@
                             },
                         }
                     });
+                    // layui.formSelects.render('add_auth_select_parent', {
+                    //     template: function(name, value, selected, disabled){
+                    //         return name + '<span style="position: absolute; right: 0; color: #A0A0A0; font-size: 12px;">' + PY.fullPY(name) + '</span>';
+                    //     }
+                    // });
                     return false;
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -332,34 +335,7 @@
                 }
             });
         });
-        // $.ajax({
-        //     url: '{:url("auth/get_auth_all")}',
-        //     type: 'GET',
-        //     dataType: 'json',
-        //     data: {},
-        //     cache: false,
-        //     async: true,
-        //     beforeSend: function () {
-        //         layer.load(1, {
-        //             shade: [0.1, '#fff'], time: 2 * 1000 //0.1透明度的白色背景
-        //         });
-        //     },
-        //     complete: function () {
-        //         layer.close('loading');
-        //     },
-        //     success: function (res) {
-        //         $("#parent_id").html(res.auths);
-        //         //刷新select选择框渲染
-        //         layui.use('form', function () {
-        //             var form = layui.form;
-        //             form.render('select');
-        //         })
-        //         return false;
-        //     },
-        //     error: function (XMLHttpRequest, textStatus, errorThrown) {
-        //         layer.alert('网络失败，请刷新页面后重试', {icon: 2});
-        //     }
-        // });
+
     }
 
     //编辑加载auth to to html option
@@ -373,7 +349,7 @@
         layui.use(['jquery', 'formSelects'], function () {
             var formSelects = layui.formSelects;
             $.ajax({
-                url: '{:url("auth/get_auth_all")}',
+                url: '{:url("auth/ajax_edit_auth")}',
                 type: 'GET',
                 dataType: 'json',
                 data: {type:'select_tree_json', edit_id: editID},
@@ -415,34 +391,6 @@
                 }
             });
         });
-        // $.ajax({
-        //     url: '{:url("auth/get_auth_all")}',
-        //     type: 'GET',
-        //     dataType: 'json',
-        //     data: {check_id: checkedID, edit_id: editID},
-        //     cache: false,
-        //     async: true,
-        //     beforeSend: function () {
-        //         layer.load(2, {
-        //             shade: [0.1, '#fff'], time: 2 * 1000 //0.1透明度的白色背景
-        //         });
-        //     },
-        //     complete: function () {
-        //         layer.closeAll('loading');
-        //     },
-        //     success: function (res) {
-        //         $("#edit_parent_id").html(res.auths);
-        //         //刷新select选择框渲染
-        //         layui.use('form', function () {
-        //             var form = layui.form;
-        //             form.render('select');
-        //         })
-        //         return false;
-        //     },
-        //     error: function (XMLHttpRequest, textStatus, errorThrown) {
-        //         layer.alert('网络失败，请刷新页面后重试', {icon: 2});
-        //     }
-        // });
     }
 </script>
 <!--ajax end-->
@@ -464,7 +412,6 @@
             });
         });
     }
-
     //tab
     layui.use(['tree', 'util', 'element'], function () {
         var $ = layui.jquery
@@ -500,7 +447,7 @@
                         , isJump: true  //link 为参数匹配
                         , onlyIconControl: true  //是否仅允许节点左侧图标控制展开收缩
                         // ,showLine: false  //是否开启连接线
-                        , edit: ['add', 'del'] //操作节点的图标
+                        , edit: ['del'] //操作节点的图标
                         , click: function (obj) {
                             var data = obj.data;  //获取当前点击的节点数据
                             // console.log(data);
@@ -737,6 +684,9 @@
                         title: '添加权限',
                         shadeClose: true,
                         content: $('#addAuthDiv') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                        ,end:function(){
+                            resetForm();
+                        }
                     });
                     break;
                 case 'delAuthEvent':
@@ -842,6 +792,9 @@
                         title: '编辑权限',
                         shadeClose: true,
                         content: $('#editAuthDiv') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                        ,end:function(){
+                            resetForm();
+                        }
                     });
                 } else if (obj.event === 'testAuthEvent') {
                     layer.msg('开发中...有兴趣+Q554665488');

@@ -16,6 +16,9 @@ use think\Model;
  */
 class UserModel extends Model
 {
+    protected $autoWriteTimestamp = true;
+    protected $createTime = 'create_at';
+    protected $updateTime = 'update_at';
 
     public function getStatusAttr($value)
     {
@@ -44,7 +47,7 @@ class UserModel extends Model
     {
         parent::__construct($data);
 
-        $this->table = !empty($authUser = Config::get('auth.table.auth_user')) ? $authUser : 'user';
+        $this->table = !empty($authUser = Config::get('auth.table.user')) ? $authUser : 'user';
     }
 
     /**
@@ -56,7 +59,7 @@ class UserModel extends Model
      */
     public function groups()
     {
-        return $this->belongsToMany(\thinkAuth\Model\GroupModel::class, \AuthGroupAccess::class, 'auth_group_id', 'uid');
+        return $this->belongsToMany(\thinkAuth\Model\GroupModel::class, \UserGroupAccess::class, 'auth_group_id', 'uid');
     }
 
     /**
@@ -66,9 +69,9 @@ class UserModel extends Model
      * @Description:用户拥有的角色
      * @return \think\model\relation\BelongsToMany
      */
-    public function Roles()
+    public function roles()
     {
-        return $this->belongsToMany(\thinkAuth\Model\UserRoleModel::class, \RoleAccess::class, 'role_id', 'uid');
+        return $this->belongsToMany(\thinkAuth\Model\RoleModel::class, \UserRoleAccess::class, 'role_id', 'uid');
     }
 
     /**
@@ -110,7 +113,7 @@ class UserModel extends Model
     {
         if (!$uid) return false;
         $user = self::get($uid);
-        $roles = $user->Roles;
+        $roles = $user->roles;
         //返回指定字段
         if ($fields) {
             foreach ($roles as $key => $role) {
@@ -121,6 +124,46 @@ class UserModel extends Model
             }
         }
         return $roles;
+    }
+
+    /**
+     * @param $uid
+     * @param array $fields
+     * @Author: yfl
+     * @Email: 554665488@qq.com
+     * @Date:2019年8月14日 17:19:18
+     * @Description:编辑用户获取用户信息及所属的权限组和角色
+     * @return mixed
+     */
+    public static function editGetUserInfo($uid, $fields = array())
+    {
+        $user = self::get($uid);
+        //获取组
+        $groups = $user->groups;
+        //返回指定字段
+        if ($fields) {
+            foreach ($groups as $key => $group) {
+                $group = $group->toArray();
+                foreach ($group as $field => $item) {
+                    if (!in_array($field, $fields)) unset($groups[$key][$field]);
+                }
+            }
+        }
+        //获取角色
+        $roles = $user->roles;
+
+        if ($fields) {
+            foreach ($roles as $key => $role) {
+                $role = $role->toArray();
+                foreach ($role as $field => $item) {
+                    if (!in_array($field, $fields)) unset($roles[$key][$field]);
+                }
+            }
+        }
+
+        $user['groupIds'] = array_column($groups->toArray(), 'id');
+        $user['roleIds'] = array_column($roles->toArray(), 'id');
+        return $user;
     }
 
     /**
@@ -194,19 +237,7 @@ class UserModel extends Model
      */
     public function updateUser()
     {
-//        array(11) {
-//        ["group_id"] => string(3) "1,5"
-//        ["have_group_ids"] => string(8) "1,2,3,4,"
-//        ["role_id"] => string(7) "8,9,2,4"
-//        ["have_role_ids"] => string(6) "1,8,9,"
-//        ["user_name"] => string(18) "重置表单测试"
-//        ["email"] => string(13) "123456@qq.com"
-//        ["status"] => string(2) "on"
-//        ["sex"] => string(1) "1"
-//        ["id"] => string(2) "21"
-//        ["del_group_ids"] => string(9) "4,3,3,2,4"
-//        ["del_role_ids"] => string(5) "9,8,1"
-//}
+
         $editData = Request::post();
         $user = self::update($editData);
         //删除已有的角权限组
@@ -240,9 +271,115 @@ class UserModel extends Model
     {
         $uid = Request::post('id');
         //删除权限组关联关系
-        AuthGroupAccess::where(['uid'=> $uid])->delete();
+        UserGroupAccess::where(['uid' => $uid])->delete();
         //删除角色关联关系
-        RoleAccess::where(['uid'=> $uid])->delete();
+        UserRoleAccess::where(['uid' => $uid])->delete();
         return self::destroy($uid);
+    }
+
+    //=============================================================
+
+    /**
+     * @param string $userFields
+     * @param string $groupField
+     * @param string $roleFied
+     * @Author: yfl
+     * @Email: 554665488@qq.com
+     * @Date:二〇一九年八月十四日 10:11:23
+     * @Description:获取用户列表及权限组和角色
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public static function getUsersAndGroupsAndRoles($where = [], $userFields = '*', $groupField = '*', $roleFied = '*')
+    {
+        $map = [];
+        $map[] = ['status', '=', 1];
+        if (!empty($where)) $map = array_merge($map, $where);
+        $usersAndGroupAndRoles = self::field($userFields)->with([
+            'groups' => function ($query) use ($groupField) {
+                $query->field($groupField);
+            },
+            'roles' => function ($query) use ($roleFied) {
+                $query->field($roleFied);
+            }
+        ])->where($map)->select();
+        return $usersAndGroupAndRoles;
+    }
+
+    /**
+     * @param $where
+     * @param string $userFields
+     * @param string $groupField
+     * @param string $roleFied
+     * @Author: yfl
+     * @Email: 554665488@qq.com
+     * @Date:2019年8月16日 15:13:15
+     * @Description:根据用户ID获取用户的组和角色以及拥有权限规则
+     * @return array|\PDOStatement|string|Model
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public static function getUserAndGroupsAndRolesAndAuthsByUid($where, $userFields = '*', $groupField = '*', $roleFied = '*')
+    {
+        $map = [];
+        $map[] = ['status', '=', 1];
+        if (!empty($where)) $map = array_merge($map, $where);
+
+        $users = self::field($userFields)->with([
+            'groups' => function ($query) use ($groupField) {
+                $query->field($groupField)->with([
+                    'auths' => function ($query) {
+                        $query->field('*');
+                    }
+                ]);
+            },
+            'roles' => function ($query) use ($roleFied) {
+                $query->field($roleFied);
+            }
+        ])->where($map)->findOrEmpty();
+        return $users;
+    }
+
+    /**
+     * @param string $userFields
+     * @param string $groupField
+     * @param string $roleFied
+     * @Author: yfl
+     * @Email: 554665488@qq.com
+     * @Date:
+     * @Description:获得所有的用户以及所属的权限组和角色
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public static function getAddGroupsUsersToSelectOption($where = [], $userFields = '*', $groupField = '*', $roleFied = '*')
+    {
+        $usersAndGroupAndRoles = self::getUsersAndGroupsAndRoles($where = [], $userFields, $groupField, $roleFied);
+        $addGroupSelectJson = [];
+        $selectUserIds = Request::has('selected_user_ids') ? explode(',', trim(Request::get('selected_user_ids'), ',')) : [];
+
+        $groupNane = $roleName = '';
+        foreach ($usersAndGroupAndRoles as $index => $user) {
+//            返回的格式[{"name":"北京","value":1,"selected":"","disabled":""}],
+            //用户所属的组
+            $groupNane = '';
+            foreach ($user['groups'] as $i => $group) {
+                $groupNane .= $group['title'] . ',';
+            }
+            //用户所属的角色
+//            foreach ($user['roles'] as $i => $role) {
+//                $groupNane .= $role['name'] . ',';
+//            }
+            $disabled = '';
+            if ($user->getData('status') == 0) $disabled = 'disabled';
+            //设置默认选中的用户
+            $selected = '';
+            if (in_array($user['id'], $selectUserIds)) $selected = 'selected';
+            $addGroupSelectJson[] = ['name' => $user['user_name'], 'value' => $user['id'], 'selected' => $selected, 'disabled' => $disabled, 'group_name' => $groupNane];
+        }
+        return $addGroupSelectJson;
     }
 }

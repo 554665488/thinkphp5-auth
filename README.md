@@ -22,7 +22,7 @@ return [
         'auth_on'           => 1, // 权限开关
         'auth_type'         => 1, // 认证方式，1为实时认证；2为登录认证。
     ],
-    基于layui 组件里边的layui文件放到public目录下 改成为你的目录
+    基于layui把composer下载包里边的layui文件放到public目录下 改成为你的目录
     'path' => [
         'layui_css' => '/static/js/plugins/layui/css/layui.css',
         'layui_js' => '/static/js/plugins/layui/layui.js',

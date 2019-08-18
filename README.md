@@ -3,7 +3,7 @@ The ThinkPHP5.1 Auth Package
 基于thinkphp5.1 简单的auth验证
 #Email 554665488@qq.com
 ## 安装
-> composer require yfl/thinkphp5-auth
+> composer require yfl/thinkphp5-auth:1.0.1
 
 ```
 #可以自定义的配置 /config/auth.php
@@ -16,7 +16,7 @@ return [
         'user'         => 'user', //用户表
         'role'         => 'role', //系统用户角色表
         'group_auth'        => 'group_auth', //权限组和权限规则关联表
-        'user_role_access'       => 'user_role_access', //权限组和权限规则关联表
+        'user_role_access'       => 'user_role_access', //权限组和角色关联表
     ],
     'switch'=>[
         'auth_on'           => 1, // 权限开关

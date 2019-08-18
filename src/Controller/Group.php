@@ -190,7 +190,7 @@ class Group extends Base
             }
         }
         $this->assign('group_id',$groupId);
-        echo $this->fetch(AuthBase::VIEW_PATH . 'user/allocationAuth.php', $this->getData());
+        return $this->fetch(AuthBase::VIEW_PATH . 'user/allocationAuth.php', $this->getData());
     }
 
     /**

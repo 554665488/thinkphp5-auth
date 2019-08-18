@@ -1,10 +1,11 @@
 # think-addons
 The ThinkPHP5.1 Auth Package 
+基于thinkphp5.1 简单的auth验证
 #Email 554665488@qq.com
 ## 安装
 > composer require yfl/thinkphp5-auth:2.0.1
 
-```可以自定义的配置
+```可以自定义的配置 /config/auth.php
 return [
     'table'  => [
         // 和Database/migrations 定义的迁移文件一致

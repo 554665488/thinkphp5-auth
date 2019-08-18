@@ -18,7 +18,7 @@
 <div id="addGroupDiv" style="display: none">
     <form class="layui-form reset-form" lay-filter="addGroupForm" id="addGroupForm">
         <div class="layui-form-item">
-            <label class="layui-form-label">权限组名</label>
+            <label class="layui-form-label">权限组名</label> 
             <div class="layui-input-block" style="width: 300px">
                 <input type="text" name="title" required lay-verify="required" placeholder="请输入权限组名"
                        autocomplete="off" class="layui-input">
